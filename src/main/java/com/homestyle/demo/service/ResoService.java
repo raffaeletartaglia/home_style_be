@@ -40,7 +40,7 @@ public class ResoService {
                     return new EntitaNonTrovataException(ErroreCodice.RESO_NON_TROVATO);
                 }
         );
-    }//rovaResoPerId
+    }
 
     @Transactional(readOnly = true)
     public Reso trovaResoPerDettaglioOrdine(UUID idDettaglioOrdine) {
@@ -53,10 +53,14 @@ public class ResoService {
                     return new EntitaNonTrovataException(ErroreCodice.RESO_NON_TROVATO);
                 }
         );
-    }//trovaResoPerDettaglioOrdine
+    }
 
     @Transactional
-    public Reso creaReso(UUID idDettaglioOrdine,UUID idIndirizzoReso, LocalDate dataResoPrevista,LocalTime oraRitiroReso,String motivo) {
+    public Reso creaReso(UUID idDettaglioOrdine,
+                         UUID idIndirizzoReso,
+                         LocalDate dataResoPrevista,
+                         LocalTime oraRitiroReso,
+                         String motivo) {
 
         log.info("Creazione reso per dettaglio ordine id: {}", idDettaglioOrdine);
 
@@ -74,7 +78,7 @@ public class ResoService {
         if (dettaglio.getReso() != null) {
             log.error("Esiste già un reso per dettaglio ordine id: {}", idDettaglioOrdine);
             throw new ResoGiaEsistenteException();
-        }//creaReso
+        }
 
         // 3. Indirizzo reso
         Indirizzo indirizzo = indirizzoRepository.findById(idIndirizzoReso)
@@ -90,7 +94,7 @@ public class ResoService {
         reso.setDataResoPrevista(dataResoPrevista);
         reso.setOraRitiroReso(oraRitiroReso);
         reso.setMotivo(motivo);
-        reso.setStato(Reso.StatoReso.RICHIESTO); // se vuoi uno stato iniziale
+        reso.setStatoReso(Reso.StatoReso.IN_PREPARAZIONE); // se vuoi uno stato iniziale
 
         Reso salvato = resoRepository.save(reso);
         log.info("Reso creato con successo, id: {}", salvato.getId());
@@ -117,7 +121,7 @@ public class ResoService {
         Reso salvato = resoRepository.save(reso);
         log.info("Reso id: {} aggiornato con nuova data/ora ritiro", salvato.getId());
         return salvato;
-    }//aggiornaDataOraRitiro
+    }
 
     @Transactional
     public Reso annullaReso(UUID idReso) {
@@ -132,17 +136,17 @@ public class ResoService {
         );
 
         // Non puoi annullare un reso già annullato o già ritirato
-        if (reso.getStato() == Reso.StatoReso.ANNULLATO || reso.getStato() == Reso.StatoReso.RITIRATO) {
-            log.error("Impossibile annullare reso id: {} con stato: {}", idReso, reso.getStato());
+        if (reso.getStatoReso() == Reso.StatoReso.ANNULLATO || reso.getStatoReso() == Reso.StatoReso.RITIRATO) {
+            log.error("Impossibile annullare reso id: {} con stato: {}", idReso, reso.getStatoReso());
             throw new OperazioneNonConsentitaException(
-                    "Impossibile annullare un reso già " + reso.getStato()
-            );
+                    "Impossibile annullare un reso già " + reso.getStatoReso(),
+                    ErroreCodice.PRENOTAZIONE_STATO_NON_VALIDO);
         }
 
-        reso.setStato(Reso.StatoReso.ANNULLATO);
+        reso.setStatoReso(Reso.StatoReso.ANNULLATO);
         Reso salvato = resoRepository.save(reso);
         log.info("Reso id: {} annullato con successo", salvato.getId());
         return salvato;
-    }//annullaReso
+    }
 
-}//ResoService
+}

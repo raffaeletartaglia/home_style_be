@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  servlet:
+    context-path: / # oppure /api se vuoi prefisso
+
+spring:
+  application:
+    name: homestyle-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/homestyle
+    username: homestyle_user
+    password: homestyle_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none           # o update/create-drop a seconda dell'ambiente
+    show-sql: true             # log SQL su console
+    properties:
+      hibernate:
+        format_sql: true       # formatta le query nei log
+
+  # Configurazione Resource Server JWT (provider esterno)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Sostituisci con il tuo issuer (Keycloak/Auth0/altro)
+          issuer-uri: https://mio-provider-esterno.com/realms/homestyle
+          # in alternativa, se non hai issuer:
+          # jwk-set-uri: https://mio-provider-esterno.com/realms/homestyle/protocol/openid-connect/certs
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG       # utile per vedere cosa fa Spring Security
+    org.hibernate.SQL: DEBUG                  # query SQL
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # parametri delle query
+    com.homestyle.demo: DEBUG                 # log della tua app (service, controller, ecc.)
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"

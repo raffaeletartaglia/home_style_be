@@ -18,7 +18,10 @@ public interface IndirizzoRepository extends JpaRepository<Indirizzo, UUID> {
 
     // Trova tutti gli indirizzi di un tipo specifico
     List<Indirizzo> findByTipo(Indirizzo.Tipo tipo);
-	
-	
 
+    // Elimina un indirizzo in base all'id di un utente
+    void deleteByUtente(Utente utente);
+
+    // Elimina tutti gli indirizzi di un utente
+    void deleteAllByUtente();
 }//IndirizzoRepository

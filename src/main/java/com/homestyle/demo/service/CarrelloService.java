@@ -44,7 +44,7 @@ public class CarrelloService {
 
         log.info("Trovato carello con id: {}", carrelloTrovato.getId());
         return carrelloTrovato;
-    }//trovaCarrelloPerId
+    }
 
     public Carrello trovaCarelloPerUtente(UUID idUtente){
         log.info("Inizio a cercare il carello dell'utente con id: {}", idUtente);
@@ -60,7 +60,7 @@ public class CarrelloService {
 
         log.info("Carello trovato con id: {}, dell'utente con id: {}", carrelloTrovato.getId(), idUtente);
         return carrelloTrovato;
-    }//trovaCarelloPerUtente
+    }
 
 
     @Transactional
@@ -89,8 +89,8 @@ public class CarrelloService {
                 throw new IllegalArgumentException("La quantità deve essere maggiore di zero");
             }
 
-            if (carrelloProdotto.getQuantita() > prodotto.getQuantitaDisponibile()) {
-                log.error("Quantità richiesta {} > disponibile {}", carrelloProdotto.getQuantita(), prodotto.getQuantitaDisponibile());
+            if (carrelloProdotto.getQuantita() > prodotto.getQuantitaRiordinoStandard()) {
+                log.error("Quantità richiesta {} > disponibile {}", carrelloProdotto.getQuantita(), prodotto.getQuantitaRiordinoStandard());
                 throw new IllegalArgumentException("Quantità richiesta superiore alla disponibilità");
             }
         }
@@ -110,9 +110,9 @@ public class CarrelloService {
         log.info("Carrello id: {} salvato con {} prodotti", carrelloSalvato.getId(), carrelloSalvato.getProdotti().size());
 
         return carrelloSalvato;
-    }//aggiuntaProdottiCarrello
+    }
 
-     public Carrello creaCarrello(UUID idUtente) {
+     Carrello creaCarrello(UUID idUtente) {
         log.info("Creazione carrello per utente id: {}", idUtente);
 
         // 1. Utente esiste?
@@ -137,7 +137,7 @@ public class CarrelloService {
         log.info("Carrello id: {} creato per utente id: {}", salvato.getId(), idUtente);
 
         return salvato;
-    }//creaCarrello
+    }
 
 
 
@@ -155,7 +155,7 @@ public class CarrelloService {
         );
         // orphanRemoval fa il resto, nessuna query manuale necessaria
         carrelloTrovato.getProdotti().clear();
-    }//svuotaCarrello
+    }
 
     @Transactional
     public void eliminaCarello(UUID idCarello){
@@ -170,7 +170,7 @@ public class CarrelloService {
         log.info("Carello con id: {}, trovato", idCarello);
         carrelloRepo.deleteById(idCarello);
         log.info("Carello con id: {}, eliminato con successo", idCarello);
-    }//eliminaCarello
+    }
 
     private void aggiungiProdottiAlCarrello(Carrello carrello, List<CarrelloProdotto> nuoviOrdini) {
         // Costruiamo un Set degli id già presenti → lookup O(1) invece di O(n)
@@ -194,6 +194,6 @@ public class CarrelloService {
                 carrello.getProdotti().add(nuovoOrdine);
             }
         }
-    }//aggiungiProdottiAlCarrello
+    }
 
-}//CarrelloService
+}

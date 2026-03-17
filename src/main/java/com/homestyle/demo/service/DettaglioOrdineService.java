@@ -31,7 +31,7 @@ public class DettaglioOrdineService {
                     return new EntitaNonTrovataException(ErroreCodice.DETTAGLIO_ORDINE_NON_TROVATO);
                 }
         );
-    }//trovaDettaglioPerId
+    }
 
     @Transactional(readOnly = true)
     public List<DettaglioOrdine> trovaDettagliPerOrdine(UUID idOrdine) {
@@ -43,7 +43,7 @@ public class DettaglioOrdineService {
 
         log.info("Trovati {} dettagli per ordine id: {}", dettagli.size(), idOrdine);
         return dettagli;
-    }//trovaDettagliPerOrdine
+    }
 
     @Transactional(readOnly = true)
     public List<DettaglioOrdine> trovaDettagliPerProdotto(UUID idProdotto) {
@@ -55,5 +55,5 @@ public class DettaglioOrdineService {
 
         log.info("Trovati {} dettagli per prodotto id: {}", dettagli.size(), idProdotto);
         return dettagli;
-    }//trovaDettagliPerProdotto
-}//DettaglioOrdineService
+    }
+}

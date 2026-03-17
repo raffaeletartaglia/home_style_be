@@ -1,7 +1,10 @@
 package exception;
 
-public class ValoreNonValidoException extends RuntimeException {
-    public ValoreNonValidoException(String messaggio) {
-        super(messaggio);
+import com.homestyle.demo.ErroreCodice;
+
+// ValoreNonValidoException
+public class ValoreNonValidoException extends BusinessException {
+    public ValoreNonValidoException(String messaggioCustom, ErroreCodice codice) {
+        super(codice, messaggioCustom);
     }
-}//ValoreNonValidoException
+}

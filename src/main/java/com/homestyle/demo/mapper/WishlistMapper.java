@@ -5,6 +5,8 @@ import com.homestyle.demo.dto.request.WishlistRequestDTO;
 import com.homestyle.demo.dto.response.WishlistResponseDTO;
 import com.homestyle.demo.entity.Wishlist;
 
+import java.util.List;
+
 
 @Mapper(componentModel = "spring")
 public interface WishlistMapper {
@@ -15,4 +17,5 @@ public interface WishlistMapper {
     // Entity → ResponseDTO
 	WishlistResponseDTO toDTO(Wishlist wishlist);
 
+    List<WishlistResponseDTO> toDTOs(List<Wishlist> wishlists);
 }//WishlistMapper

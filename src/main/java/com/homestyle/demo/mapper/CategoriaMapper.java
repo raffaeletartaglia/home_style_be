@@ -7,6 +7,8 @@ import com.homestyle.demo.dto.request.CategoriaRequestDTO;
 import com.homestyle.demo.dto.response.CategoriaResponseDTO;
 import com.homestyle.demo.entity.Categoria;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CategoriaMapper {
 
@@ -15,5 +17,6 @@ public interface CategoriaMapper {
 
     // Entity → ResponseDTO
     CategoriaResponseDTO toDTO(Categoria categoria);
-    
+
+    List<CategoriaResponseDTO> toDTOs(List<Categoria> allCategorie);
 }//CategoriaMapper

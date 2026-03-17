@@ -22,5 +22,6 @@ public interface ResoRepository extends JpaRepository<Reso, UUID> {
 
     // Trova tutti i resi legati a un indirizzo specifico
     List<Reso> findByIndirizzoReso(Indirizzo indirizzoReso);
-    
+
+    Optional<Reso> findByDettaglioOrdine_Id(UUID dettaglioOrdineId);
 }//ResoRepository

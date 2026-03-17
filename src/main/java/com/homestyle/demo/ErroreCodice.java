@@ -1,4 +1,5 @@
 package com.homestyle.demo;
+
 import org.springframework.http.HttpStatus;
 
 public enum ErroreCodice {
@@ -11,6 +12,14 @@ public enum ErroreCodice {
     // ================== UTENTE ==================
     UTENTE_NON_TROVATO("UTENTE_NON_TROVATO", "Utente non trovato", HttpStatus.NOT_FOUND),
     UTENTE_DUPLICATO("UTENTE_DUPLICATO", "Esiste già un utente con questi dati", HttpStatus.CONFLICT),
+    UTENTE_NOME_NON_VALIDO("UTENTE_NOME_NON_VALIDO", "Nome utente non valido", HttpStatus.BAD_REQUEST),
+    UTENTE_COGNOME_NON_VALIDO("UTENTE_COGNOME_NON_VALIDO", "Cognome utente non valido", HttpStatus.BAD_REQUEST),
+    UTENTE_EMAIL_NON_VALIDA("UTENTE_EMAIL_NON_VALIDA", "Email utente non valida", HttpStatus.BAD_REQUEST),
+    UTENTE_PASSWORD_NON_VALIDA("UTENTE_PASSWORD_NON_VALIDA", "Password utente non valida", HttpStatus.BAD_REQUEST),
+    UTENTE_NUMERO_TELEFONO_NON_VALIDO("UTENTE_NUMERO_TELEFONO_NON_VALIDO", "Numero di telefono utente non valido", HttpStatus.BAD_REQUEST),
+    UTENTE_EMAIL_GIA_REGISTRATA("UTENTE_EMAIL_GIA_REGISTRATA", "Email già registrata", HttpStatus.CONFLICT),
+    UTENTE_NUMERO_GIA_REGISTRATO("UTENTE_NUMERO_GIA_REGISTRATO", "Numero di telefono già registrato", HttpStatus.CONFLICT),
+    UTENTE_CON_ORDINI_IN_LAVORAZIONE("UTENTE_CON_ORDINI_IN_LAVORAZIONE", "Impossibile eliminare l'utente: ordini in lavorazione presenti", HttpStatus.BAD_REQUEST),
 
     // ================== CATEGORIA ==================
     CATEGORIA_NON_TROVATA("CATEGORIA_NON_TROVATA", "Categoria non trovata", HttpStatus.NOT_FOUND),
@@ -72,6 +81,12 @@ public enum ErroreCodice {
     // ================== MOVIMENTO_MAGAZZINO ==================
     MOVIMENTO_MAGAZZINO_NON_TROVATO("MOVIMENTO_MAGAZZINO_NON_TROVATO", "Movimento magazzino non trovato", HttpStatus.NOT_FOUND),
     MOVIMENTO_MAGAZZINO_NON_VALIDO("MOVIMENTO_MAGAZZINO_NON_VALIDO", "Movimento magazzino non valido", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_TIPO_NON_VALIDO("MOVIMENTO_MAGAZZINO_TIPO_NON_VALIDO", "Tipo movimento magazzino non valido", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_QUANTITA_NON_VALIDA("MOVIMENTO_MAGAZZINO_QUANTITA_NON_VALIDA", "Quantità movimento magazzino non valida", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_NOTE_NON_VALIDE("MOVIMENTO_MAGAZZINO_NOTE_NON_VALIDE", "Note movimento magazzino non valide", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_DATA_NON_VALIDA("MOVIMENTO_MAGAZZINO_DATA_NON_VALIDA", "Data movimento magazzino non valida", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_TIPO_NON_GESTITO("MOVIMENTO_MAGAZZINO_TIPO_NON_GESTITO", "Tipo movimento magazzino non gestito", HttpStatus.BAD_REQUEST),
+    MOVIMENTO_MAGAZZINO_TIPO_NON_GESTITO_INVERSIONE("MOVIMENTO_MAGAZZINO_TIPO_NON_GESTITO_INVERSIONE", "Tipo movimento magazzino non gestito per inversione quantità", HttpStatus.BAD_REQUEST),
 
     // ================== RECENSIONE ==================
     RECENSIONE_NON_TROVATA("RECENSIONE_NON_TROVATA", "Recensione non trovata", HttpStatus.NOT_FOUND),
@@ -107,4 +122,4 @@ public enum ErroreCodice {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
-}//ErroreCodice
+}

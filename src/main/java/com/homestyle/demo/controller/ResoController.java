@@ -23,7 +23,7 @@ public class ResoController {
     private final ResoService resoService;
     private final ResoMapper resoMapper;
 
-    
+    // ============ LETTURA ============
 
     /**
      * USER/ADMIN: recupera un reso per id
@@ -72,6 +72,7 @@ public class ResoController {
         return ResponseEntity.ok(resoMapper.toDTO(reso));
     }
 
+    // ============ MODIFICHE ============
 
     /**
      * USER/ADMIN: aggiorna data/ora di ritiro (se il reso lo prevede)
@@ -97,3 +98,4 @@ public class ResoController {
         return ResponseEntity.ok(resoMapper.toDTO(reso));
     }
 }
+

@@ -1,9 +1,9 @@
 package exception;
 
-public class OperazioneNonConsentitaException extends RuntimeException {
-	
-	public OperazioneNonConsentitaException(String messaggio) {
-		super(messaggio);
-	}
+import com.homestyle.demo.ErroreCodice;
 
-}//OperazioneNonConsentitaException
+public class OperazioneNonConsentitaException extends BusinessException {
+    public OperazioneNonConsentitaException(String messaggioCustom, ErroreCodice prenotazioneStatoNonValido) {
+        super(ErroreCodice.OPERAZIONE_NON_CONSENTITA, messaggioCustom);
+    }
+}

@@ -1,14 +1,19 @@
 package com.homestyle.demo.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"dettagliOrdine", "pagamento", "spedizione", "movimentiMagazzino"})
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "ordine")
 public class Ordine {
@@ -36,6 +41,9 @@ public class Ordine {
     @Column(name = "data_ordine", updatable = false)
     private LocalDateTime dataOrdine;
 
+    @Column(name = "prezzo_totale", nullable = false)
+    private BigDecimal prezzoTotale;
+
     @PrePersist
     protected void onCreate() {
         this.dataOrdine = LocalDateTime.now();
@@ -56,8 +64,8 @@ public class Ordine {
     @OneToOne(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private Pagamento pagamento;
 
-    @OneToOne(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Spedizione spedizione;
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Spedizione> spedizione;
 
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovimentoMagazzino> movimentiMagazzino = new ArrayList<>();

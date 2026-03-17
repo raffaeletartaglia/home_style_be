@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.homestyle.demo.ErroreCodice;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -37,32 +38,32 @@ public class PrenotazioneService {
 
 		log.info("Creazione nuova prenotazione");
 
-		if(prenotazione == null) {
-			throw new ValoreNonValidoException("Prenotazione nulla");
+		if (prenotazione == null) {
+			throw new ValoreNonValidoException("Prenotazione nulla", ErroreCodice.ERRORE_VALIDAZIONE);
 		}
 
-		if(!controlloQuantita(prenotazione.getQuantita())) {
+		if (!controlloQuantita(prenotazione.getQuantita())) {
 			log.error("Quantità non valida: {}", prenotazione.getQuantita());
-			throw new ValoreNonValidoException("Quantità non valida");
+			throw new ValoreNonValidoException("Quantità non valida", ErroreCodice.ERRORE_VALIDAZIONE);
 		}
 
-		if(!controlloDataPrevista(prenotazione.getDataPrevistaDisponibilita())) {
+		if (!controlloDataPrevista(prenotazione.getDataPrevistaDisponibilita())) {
 			log.error("Data prevista disponibilità non valida");
-			throw new ValoreNonValidoException("Data prevista disponibilità non valida");
+			throw new ValoreNonValidoException("Data prevista disponibilità non valida", ErroreCodice.ERRORE_VALIDAZIONE);
 		}
 
-		if(!controlloDataPrenotazione(prenotazione.getDataPrenotazione())) {
+		if (!controlloDataPrenotazione(prenotazione.getDataPrenotazione())) {
 			log.error("Data prenotazione non valida");
-			throw new ValoreNonValidoException("Data prenotazione non valida");
+			throw new ValoreNonValidoException("Data prenotazione non valida", ErroreCodice.ERRORE_VALIDAZIONE);
 		}
 
 		// se non valorizzata la imposto automaticamente
-		if(prenotazione.getDataPrenotazione() == null) {
+		if (prenotazione.getDataPrenotazione() == null) {
 			prenotazione.setDataPrenotazione(LocalDateTime.now());
 		}
 
-		if(prenotazione.getUtente() == null) {
-			throw new ValoreNonValidoException("Utente non specificato");
+		if (prenotazione.getUtente() == null) {
+			throw new ValoreNonValidoException("Utente non specificato", ErroreCodice.UTENTE_NON_TROVATO);
 		}
 
 		ControlliUtils.controlloIdValido(prenotazione.getUtente().getId(), "Utente");
@@ -70,14 +71,14 @@ public class PrenotazioneService {
 		Utente utente = utenteRepo.findById(prenotazione.getUtente().getId())
 				.orElseThrow(() -> {
 					log.error("Utente non trovato: {}", prenotazione.getUtente().getId());
-					return new EntitaNonTrovataException("Utente non trovato");
+					return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
 				});
 
 		prenotazione.setUtente(utente);
 		log.info("Utente associato alla prenotazione: {}", utente.getId());
 
-		if(prenotazione.getProdotto() == null) {
-			throw new ValoreNonValidoException("Prodotto non specificato");
+		if (prenotazione.getProdotto() == null) {
+			throw new ValoreNonValidoException("Prodotto non specificato", ErroreCodice.PRODOTTO_NON_TROVATO);
 		}
 
 		ControlliUtils.controlloIdValido(prenotazione.getProdotto().getId(), "Prodotto");
@@ -85,7 +86,7 @@ public class PrenotazioneService {
 		Prodotto prodotto = prodottoRepo.findById(prenotazione.getProdotto().getId())
 				.orElseThrow(() -> {
 					log.error("Prodotto non trovato: {}", prenotazione.getProdotto().getId());
-					return new EntitaNonTrovataException("Prodotto non trovato");
+					return new EntitaNonTrovataException(ErroreCodice.PRODOTTO_NON_TROVATO);
 				});
 
 		prenotazione.setProdotto(prodotto);
@@ -102,8 +103,7 @@ public class PrenotazioneService {
 
 	}//creaPrenotazione
 
-
-	public List<Prenotazione> getPrenotazioniByUtente(UUID utenteId){
+	public List<Prenotazione> getPrenotazioniByUtente(UUID utenteId) {
 
 		log.info("Recupero prenotazioni per utenteId={}", utenteId);
 
@@ -112,7 +112,7 @@ public class PrenotazioneService {
 		Utente utente = utenteRepo.findById(utenteId)
 				.orElseThrow(() -> {
 					log.error("Utente non trovato: {}", utenteId);
-					return new EntitaNonTrovataException("Utente non trovato");
+					return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
 				});
 
 		List<Prenotazione> prenotazioni = prenotazioneRepo.findByUtente(utente);
@@ -123,8 +123,7 @@ public class PrenotazioneService {
 
 	}//getPrenotazioniByUtente
 
-
-	public List<Prenotazione> getPrenotazioniByProdotto(UUID prodottoId){
+	public List<Prenotazione> getPrenotazioniByProdotto(UUID prodottoId) {
 
 		log.info("Recupero prenotazioni per prodottoId={}", prodottoId);
 
@@ -133,7 +132,7 @@ public class PrenotazioneService {
 		Prodotto prodotto = prodottoRepo.findById(prodottoId)
 				.orElseThrow(() -> {
 					log.error("Prodotto non trovato: {}", prodottoId);
-					return new EntitaNonTrovataException("Prodotto non trovato");
+					return new EntitaNonTrovataException(ErroreCodice.PRODOTTO_NON_TROVATO);
 				});
 
 		List<Prenotazione> prenotazioni = prenotazioneRepo.findByProdotto(prodotto);
@@ -144,38 +143,36 @@ public class PrenotazioneService {
 
 	}//getPrenotazioniByProdotto
 
+	public List<Prenotazione> getPrenotazioniAttiveByProdotto(UUID prodottoId) {
 
-	public List<Prenotazione> getPrenotazioniAttiveByProdotto(UUID prodottoId){
+		log.info("Recupero prenotazioni ATTIVE ordinate per data per prodottoId={}", prodottoId);
 
-	    log.info("Recupero prenotazioni ATTIVE ordinate per data per prodottoId={}", prodottoId);
+		ControlliUtils.controlloIdValido(prodottoId, "Prodotto");
 
-	    ControlliUtils.controlloIdValido(prodottoId, "Prodotto");
+		Prodotto prodotto = prodottoRepo.findById(prodottoId)
+				.orElseThrow(() -> {
+					log.error("Prodotto non trovato: {}", prodottoId);
+					return new EntitaNonTrovataException(ErroreCodice.PRODOTTO_NON_TROVATO);
+				});
+		List<Prenotazione> prenotazioni =
+				prenotazioneRepo.findByProdottoAndStatoOrderByDataPrenotazioneAsc(
+						prodotto,
+						Prenotazione.Stato.ATTIVA
+				);
 
-	    Prodotto prodotto = prodottoRepo.findById(prodottoId)
-	            .orElseThrow(() -> {
-	                log.error("Prodotto non trovato: {}", prodottoId);
-	                return new EntitaNonTrovataException("Prodotto non trovato");
-	            });
-	    List<Prenotazione> prenotazioni =
-	            prenotazioneRepo.findByProdottoAndStatoOrderByDataPrenotazioneAsc(
-	                    prodotto,
-	                    Prenotazione.Stato.ATTIVA
-	            );
+		log.info("Trovate {} prenotazioni ATTIVE ordinate per data per prodotto {}", prenotazioni.size(), prodottoId);
 
-	    log.info("Trovate {} prenotazioni ATTIVE ordinate per data per prodotto {}", prenotazioni.size(), prodottoId);
-
-	    return prenotazioni;
+		return prenotazioni;
 
 	}//getPrenotazioniAttiveByProdotto
 
-
-	public List<Prenotazione> getPrenotazioniByStato(Prenotazione.Stato stato){
+	public List<Prenotazione> getPrenotazioniByStato(Prenotazione.Stato stato) {
 
 		log.info("Recupero prenotazioni per stato={}", stato);
 
-		if(!controlloStato(stato)) {
+		if (!controlloStato(stato)) {
 			log.error("Stato non valido: {}", stato);
-			throw new ValoreNonValidoException("Stato non valido");
+			throw new ValoreNonValidoException("Stato non valido", ErroreCodice.PRENOTAZIONE_STATO_NON_VALIDO);
 		}
 
 		List<Prenotazione> prenotazioni = prenotazioneRepo.findByStato(stato);
@@ -186,13 +183,12 @@ public class PrenotazioneService {
 
 	}//getPrenotazioniByStato
 
-
-	public List<Prenotazione> getPrenotazioniInArrivo(LocalDate data){
+	public List<Prenotazione> getPrenotazioniInArrivo(LocalDate data) {
 
 		log.info("Recupero prenotazioni con disponibilità prevista prima di {}", data);
 
-		if(data == null) {
-			throw new ValoreNonValidoException("Data non valida");
+		if (data == null) {
+			throw new ValoreNonValidoException("Data non valida", ErroreCodice.ERRORE_VALIDAZIONE);
 		}
 
 		List<Prenotazione> prenotazioni = prenotazioneRepo.findByDataPrevistaDisponibilitaBefore(data);
@@ -203,9 +199,8 @@ public class PrenotazioneService {
 
 	}//getPrenotazioniInArrivo
 
-
 	@Transactional
-	public Prenotazione annullaPrenotazione(UUID prenotazioneId){
+	public Prenotazione annullaPrenotazione(UUID prenotazioneId) {
 
 		log.info("Annullamento prenotazione id={}", prenotazioneId);
 
@@ -214,12 +209,15 @@ public class PrenotazioneService {
 		Prenotazione prenotazione = prenotazioneRepo.findById(prenotazioneId)
 				.orElseThrow(() -> {
 					log.error("Prenotazione non trovata: {}", prenotazioneId);
-					return new EntitaNonTrovataException("Prenotazione non trovata");
+					return new EntitaNonTrovataException(ErroreCodice.PRENOTAZIONE_NON_TROVATA);
 				});
 
-		if(prenotazione.getStato() != Prenotazione.Stato.ATTIVA) {
+		if (prenotazione.getStato() != Prenotazione.Stato.ATTIVA) {
 			log.error("Solo prenotazioni ATTIVE possono essere annullate");
-			throw new OperazioneNonConsentitaException("Solo prenotazioni ATTIVE possono essere annullate");
+			throw new OperazioneNonConsentitaException(
+					"Solo prenotazioni ATTIVE possono essere annullate",
+					ErroreCodice.PRENOTAZIONE_STATO_NON_VALIDO
+			);
 		}
 
 		prenotazione.setStato(Prenotazione.Stato.ANNULLATA);
@@ -232,9 +230,8 @@ public class PrenotazioneService {
 
 	}//annullaPrenotazione
 
-
 	@Transactional
-	public Prenotazione eseguiPrenotazione(UUID prenotazioneId){
+	public Prenotazione eseguiPrenotazione(UUID prenotazioneId) {
 
 		log.info("Esecuzione prenotazione id={}", prenotazioneId);
 
@@ -243,12 +240,15 @@ public class PrenotazioneService {
 		Prenotazione prenotazione = prenotazioneRepo.findById(prenotazioneId)
 				.orElseThrow(() -> {
 					log.error("Prenotazione non trovata: {}", prenotazioneId);
-					return new EntitaNonTrovataException("Prenotazione non trovata");
+					return new EntitaNonTrovataException(ErroreCodice.PRENOTAZIONE_NON_TROVATA);
 				});
 
-		if(prenotazione.getStato() != Prenotazione.Stato.ATTIVA) {
+		if (prenotazione.getStato() != Prenotazione.Stato.ATTIVA) {
 			log.error("Prenotazione non eseguibile. Stato attuale: {}", prenotazione.getStato());
-			throw new OperazioneNonConsentitaException("Solo le prenotazioni ATTIVE possono essere eseguite");
+			throw new OperazioneNonConsentitaException(
+					"Solo le prenotazioni ATTIVE possono essere eseguite",
+					ErroreCodice.PRENOTAZIONE_STATO_NON_VALIDO
+			);
 		}
 
 		prenotazione.setStato(Prenotazione.Stato.ESEGUITA);
@@ -261,29 +261,27 @@ public class PrenotazioneService {
 
 	}//eseguiPrenotazione
 
+	// ===== CONTROLLI =====
 
 	private boolean controlloQuantita(Integer quantita) {
 		log.debug("Controllo quantità prenotazione: {}", quantita);
 		return quantita != null && quantita > 0;
 	}//controlloQuantita
 
-
 	private boolean controlloStato(Prenotazione.Stato stato) {
 		log.debug("Controllo stato prenotazione: {}", stato);
 		return stato != null;
 	}//controlloStato
 
-
 	private boolean controlloDataPrevista(LocalDate data) {
 		log.debug("Controllo data prevista disponibilità: {}", data);
-		if(data == null) return true;
+		if (data == null) return true;
 		return !data.isBefore(LocalDate.now());
 	}//controlloDataPrevista
 
-
 	private boolean controlloDataPrenotazione(LocalDateTime dataPrenotazione) {
 		log.debug("Controllo data prenotazione: {}", dataPrenotazione);
-		if(dataPrenotazione == null) {
+		if (dataPrenotazione == null) {
 			return true;
 		}
 		return !dataPrenotazione.isAfter(LocalDateTime.now());

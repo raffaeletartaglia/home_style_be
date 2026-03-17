@@ -37,10 +37,12 @@ public class WishlistService {
         }
         log.info("Wishlist trovata con successo");
         return wishlists;
-    }//trovaWishlistPerUtente
+    }
 
     @Transactional
-    public Wishlist aggiungiAWishlist(UUID idUtente, UUID idProdott, Wishlist.Priorita priorita) {
+    public Wishlist aggiungiAWishlist(UUID idUtente,
+                                      UUID idProdotto,
+                                      Wishlist.Priorita priorita) {
         log.info("Aggiunta prodotto id: {} in wishlist utente id: {}", idProdotto, idUtente);
 
         ControlliUtils.controlloIdValido(idUtente, "utente");
@@ -92,7 +94,7 @@ public class WishlistService {
         Wishlist salvata = wishlistRepository.save(wishlist);
         log.info("Wishlist item creato con id: {}", salvata.getId());
         return salvata;
-    }// aggiungiAWishlist
+    }
 
     @Transactional
     public Wishlist aggiornaPriorita(UUID idWishlist, Wishlist.Priorita nuovaPriorita) {
@@ -110,7 +112,7 @@ public class WishlistService {
         Wishlist salvata = wishlistRepository.save(w);
         log.info("Wishlist id: {} aggiornata a priorità: {}", salvata.getId(), salvata.getPriorita());
         return salvata;
-    }//aggiornaPriorita
+    }
 
     @Transactional
     public void rimuoviDaWishlist(UUID idWishlist) {
@@ -124,7 +126,7 @@ public class WishlistService {
 
         wishlistRepository.deleteById(idWishlist);
         log.info("Wishlist id: {} rimossa con successo", idWishlist);
-    }//rimuoviDaWishlist
+    }
 
     @Transactional
     public void svuotaWishlistPerUtente(UUID idUtente) {
@@ -133,5 +135,7 @@ public class WishlistService {
 
         wishlistRepository.deleteByUtente_Id(idUtente);
         log.info("Wishlist svuotata per utente id: {}", idUtente);
-    }//vuotaWishlistPerUtente
-}//WishlistService
+    }
+}
+
+

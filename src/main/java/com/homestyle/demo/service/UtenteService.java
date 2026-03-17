@@ -2,7 +2,7 @@ package com.homestyle.demo.service;
 
 import java.util.UUID;
 
-
+import com.homestyle.demo.ErroreCodice;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,6 @@ public class UtenteService {
     private final UtenteRepository utenteRepo;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    
     public Utente prendiDatiUtente(UUID idUtente) {
         log.info("Recupero dati utente con id={}", idUtente);
 
@@ -32,49 +31,51 @@ public class UtenteService {
         return utenteRepo.findById(idUtente)
                 .orElseThrow(() -> {
                     log.error("Utente non trovato con id={}", idUtente);
-                    return new EntitaNonTrovataException("Utente non trovato");
+                    return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
                 });
     }//prendiDatiUtente
 
-    
     public Utente registrazioneUtente(Utente utente) {
         log.info("Registrazione nuovo utente con email={}", utente.getEmail());
 
         if (!controllaNomeUtente(utente.getNome())) {
             log.error("Nome non valido: {}", utente.getNome());
-            throw new ValoreNonValidoException("Nome non valido");
+            throw new ValoreNonValidoException("Nome non valido", ErroreCodice.UTENTE_NOME_NON_VALIDO);
         }
 
         if (!controllaCognomeUtente(utente.getCognome())) {
             log.error("Cognome non valido: {}", utente.getCognome());
-            throw new ValoreNonValidoException("Cognome non valido");
+            throw new ValoreNonValidoException("Cognome non valido", ErroreCodice.UTENTE_COGNOME_NON_VALIDO);
         }
 
         if (!controllaEmailUtente(utente.getEmail())) {
             log.error("Email non valida: {}", utente.getEmail());
-            throw new ValoreNonValidoException("Email non valida");
+            throw new ValoreNonValidoException("Email non valida", ErroreCodice.UTENTE_EMAIL_NON_VALIDA);
         }
 
         if (!controllaPasswordUtente(utente.getPassword())) {
             log.error("Password non valida");
-            throw new ValoreNonValidoException("Password non valida");
+            throw new ValoreNonValidoException("Password non valida", ErroreCodice.UTENTE_PASSWORD_NON_VALIDA);
         }
 
         if (utente.getNumeroTelefono() != null &&
-            !controlloNumeroTelefonoUtente(utente.getNumeroTelefono())) {
+                !controlloNumeroTelefonoUtente(utente.getNumeroTelefono())) {
             log.error("Numero telefono non valido: {}", utente.getNumeroTelefono());
-            throw new ValoreNonValidoException("Numero di telefono non valido");
+            throw new ValoreNonValidoException("Numero di telefono non valido",
+                    ErroreCodice.UTENTE_NUMERO_TELEFONO_NON_VALIDO);
         }
 
         if (utenteRepo.existByEmail(utente.getEmail())) {
             log.error("Email già registrata: {}", utente.getEmail());
-            throw new EmailEsistenteException("Email già registrata");
+            throw new EmailEsistenteException("Email già registrata",
+                    ErroreCodice.UTENTE_EMAIL_GIA_REGISTRATA);
         }
 
         if (utente.getNumeroTelefono() != null &&
-            utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono())) {
+                utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono())) {
             log.error("Numero telefono già registrato: {}", utente.getNumeroTelefono());
-            throw new NumeroEsistenteException("Numero telefono già registrato");
+            throw new NumeroEsistenteException("Numero telefono già registrato",
+                    ErroreCodice.UTENTE_NUMERO_GIA_REGISTRATO);
         }
 
         utente.setPassword(passwordEncoder.encode(utente.getPassword()));
@@ -86,7 +87,6 @@ public class UtenteService {
         return salvato;
     }//registrazioneUtente
 
-    
     public Utente modificaUtente(UUID idUtente, Utente utente) {
         log.info("Modifica utente con id={}", idUtente);
 
@@ -95,31 +95,33 @@ public class UtenteService {
         Utente vecchioUtente = utenteRepo.findById(idUtente)
                 .orElseThrow(() -> {
                     log.error("Utente non trovato con id={}", idUtente);
-                    return new EntitaNonTrovataException("Utente non trovato");
+                    return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
                 });
 
         if (!controllaNomeUtente(utente.getNome())) {
             log.error("Nome non valido: {}", utente.getNome());
-            throw new ValoreNonValidoException("Nome non valido");
+            throw new ValoreNonValidoException("Nome non valido", ErroreCodice.UTENTE_NOME_NON_VALIDO);
         }
 
         if (!controllaCognomeUtente(utente.getCognome())) {
             log.error("Cognome non valido: {}", utente.getCognome());
-            throw new ValoreNonValidoException("Cognome non valido");
+            throw new ValoreNonValidoException("Cognome non valido", ErroreCodice.UTENTE_COGNOME_NON_VALIDO);
         }
 
         if (utente.getNumeroTelefono() != null &&
-            !controlloNumeroTelefonoUtente(utente.getNumeroTelefono())) {
+                !controlloNumeroTelefonoUtente(utente.getNumeroTelefono())) {
             log.error("Numero telefono non valido: {}", utente.getNumeroTelefono());
-            throw new ValoreNonValidoException("Numero di telefono non valido");
+            throw new ValoreNonValidoException("Numero di telefono non valido",
+                    ErroreCodice.UTENTE_NUMERO_TELEFONO_NON_VALIDO);
         }
 
         if (utente.getNumeroTelefono() != null &&
-            utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono()) &&
-            !utente.getNumeroTelefono().equals(vecchioUtente.getNumeroTelefono())) {
+                utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono()) &&
+                !utente.getNumeroTelefono().equals(vecchioUtente.getNumeroTelefono())) {
 
             log.error("Numero telefono già registrato: {}", utente.getNumeroTelefono());
-            throw new NumeroEsistenteException("Numero telefono già registrato");
+            throw new NumeroEsistenteException("Numero telefono già registrato",
+                    ErroreCodice.UTENTE_NUMERO_GIA_REGISTRATO);
         }
 
         vecchioUtente.setNome(utente.getNome());
@@ -133,7 +135,6 @@ public class UtenteService {
         return aggiornato;
     }//modificaUtente
 
-    
     public Utente modificaEmailUtente(UUID idUtente, String nuovaEmail) {
         log.info("Modifica email utente id={} nuovaEmail={}", idUtente, nuovaEmail);
 
@@ -142,19 +143,20 @@ public class UtenteService {
         Utente utente = utenteRepo.findById(idUtente)
                 .orElseThrow(() -> {
                     log.error("Utente non trovato con id={}", idUtente);
-                    return new EntitaNonTrovataException("Utente non trovato");
+                    return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
                 });
 
         if (!controllaEmailUtente(nuovaEmail)) {
             log.error("Email non valida: {}", nuovaEmail);
-            throw new ValoreNonValidoException("Email non valida");
+            throw new ValoreNonValidoException("Email non valida", ErroreCodice.UTENTE_EMAIL_NON_VALIDA);
         }
 
         if (utenteRepo.existByEmail(nuovaEmail) &&
-            !utente.getEmail().equals(nuovaEmail)) {
+                !utente.getEmail().equals(nuovaEmail)) {
 
             log.error("Email già registrata: {}", nuovaEmail);
-            throw new EmailEsistenteException("Email già registrata");
+            throw new EmailEsistenteException("Email già registrata",
+                    ErroreCodice.UTENTE_EMAIL_GIA_REGISTRATA);
         }
 
         utente.setEmail(nuovaEmail);
@@ -166,7 +168,6 @@ public class UtenteService {
         return aggiornato;
     }//modificaEmailUtente
 
-   
     public Utente modificaPasswordUtente(UUID idUtente, String nuovaPassword) {
         log.info("Modifica password utente id={}", idUtente);
 
@@ -175,12 +176,12 @@ public class UtenteService {
         Utente utente = utenteRepo.findById(idUtente)
                 .orElseThrow(() -> {
                     log.error("Utente non trovato con id={}", idUtente);
-                    return new EntitaNonTrovataException("Utente non trovato");
+                    return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
                 });
 
         if (!controllaPasswordUtente(nuovaPassword)) {
             log.error("Password non valida");
-            throw new ValoreNonValidoException("Password non valida");
+            throw new ValoreNonValidoException("Password non valida", ErroreCodice.UTENTE_PASSWORD_NON_VALIDA);
         }
 
         utente.setPassword(passwordEncoder.encode(nuovaPassword));
@@ -192,7 +193,6 @@ public class UtenteService {
         return aggiornato;
     }//modificaPassword
 
-    
     public void deleteUtente(UUID idUtente) {
         log.info("Eliminazione utente id={}", idUtente);
 
@@ -201,7 +201,7 @@ public class UtenteService {
         Utente utente = utenteRepo.findById(idUtente)
                 .orElseThrow(() -> {
                     log.error("Utente non trovato con id={}", idUtente);
-                    return new EntitaNonTrovataException("Utente non trovato");
+                    return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
                 });
 
         boolean ordiniInLavorazione = utente.getOrdini().stream()
@@ -210,7 +210,9 @@ public class UtenteService {
         if (ordiniInLavorazione) {
             log.error("Impossibile eliminare utente id={} - ordini in lavorazione presenti", idUtente);
             throw new ValoreNonValidoException(
-                "Impossibile eliminare l'utente: ci sono ordini in lavorazione");
+                    "Impossibile eliminare l'utente: ci sono ordini in lavorazione",
+                    ErroreCodice.UTENTE_CON_ORDINI_IN_LAVORAZIONE
+            );
         }
 
         utenteRepo.deleteById(idUtente);
@@ -218,7 +220,8 @@ public class UtenteService {
         log.info("Utente eliminato con successo id={}", idUtente);
     }//deleteUtente
 
-    
+    // ========= VALIDAZIONI =========
+
     private boolean controllaNomeUtente(String nomeUtente) {
         log.debug("Controllo nome utente: {}", nomeUtente);
         return nomeUtente != null && !nomeUtente.isEmpty() && nomeUtente.length() < 100;

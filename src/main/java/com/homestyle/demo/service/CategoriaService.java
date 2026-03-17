@@ -36,9 +36,11 @@ public class CategoriaService {
 
 		log.info("Categoria con id: {} trovata", idCategoria);
 		return categoria;
-	}//getCategoriaById
+	}
 
-	
+	/**
+	 * Ritorna la lista di tutte le categorie
+	 */
 	public List<Categoria> getAllCategorie() {
 		log.info("Recupero di tutte le categorie");
 		List<Categoria> categorie = categoriaRepo.findAll();
@@ -50,30 +52,28 @@ public class CategoriaService {
 		}
 
 		return categorie;
-	}//getAllCategorie
+	}
 
 	public Categoria addCategoria(Categoria categoria) {
 
 		if (controllaLunghezzaNomeCategoria(categoria.getNomeCategoria())) {
 			log.error("Nome categoria non valido: {}", categoria.getNomeCategoria());
 			throw new ValoreNonValidoException(
-					ErroreCodice.CATEGORIA_NOME_NON_VALIDO,
-					"Nome invalido, caratteri inferiori a 0 o superiori a 100 caratteri"
+					"Nome invalido, caratteri inferiori a 0 o superiori a 100 caratteri", ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA
 			);
 		}
 
 		if (controlloLunghezzaDescrizione(categoria.getDescrizione())) {
 			log.error("Descrizione categoria non valida");
 			throw new ValoreNonValidoException(
-					ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA,
-					"Descrizione invalida, descrizione vuota o superiore a 255 caratteri"
+					"Descrizione invalida, descrizione vuota o superiore a 255 caratteri", ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA
 			);
 		}
 
 		Categoria salvata = categoriaRepo.save(categoria);
 		log.info("Categoria creata con id: {}", salvata.getId());
 		return salvata;
-	}// addCategoria
+	}
 
 	public Categoria modifyCategoria(UUID idCategoria, Categoria categoria) {
 
@@ -91,7 +91,7 @@ public class CategoriaService {
 		Categoria salvata = categoriaRepo.save(vecchiaCategoria);
 		log.info("Categoria id: {} aggiornata", salvata.getId());
 		return salvata;
-	}//modifyCategoria
+	}
 
 	public void deleteCategoria(UUID idCategoria) {
 
@@ -107,13 +107,13 @@ public class CategoriaService {
 
 		categoriaRepo.deleteById(idCategoria);
 		log.info("Categoria id: {} eliminata", vecchiaCategoria.getId());
-	}//deleteCategoria
+	}
 
 	private boolean controllaLunghezzaNomeCategoria(String nomeCategoria) {
 		return !nomeCategoria.isEmpty() && nomeCategoria.length() < 100;
-	}//controllaLunghezzaNomeCategoria
+	}
 
 	private boolean controlloLunghezzaDescrizione(String descrizione) {
 		return !descrizione.isEmpty() && descrizione.length() < 255;
-	}//controlloLunghezzaDescrizione
-}//CategoriaService
+	}
+}

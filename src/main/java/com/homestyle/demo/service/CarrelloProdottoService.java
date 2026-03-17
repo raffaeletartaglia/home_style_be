@@ -41,7 +41,7 @@ public class CarrelloProdottoService {
         log.info("Carrello prodotto con id: {} trovato", idCarrelloProdotto);
 
         return carrelloProdottoTrovato;
-    }//trovaCarrelloProdottoPerId
+    }
 
     @Transactional(readOnly = true)
     public List<CarrelloProdotto> trovaProdottiDelCarrello(UUID idCarrello) {
@@ -59,14 +59,12 @@ public class CarrelloProdottoService {
             log.warn("Carrello prodotto di carrello con id: {} vuoto", idCarrello);
             // se preferisci, puoi NON lanciare eccezione e restituire lista vuota
             throw new ValoreNonValidoException(
-                    ErroreCodice.CARRELLO_VUOTO,
-                    "Carrello prodotto vuoto"
-            );
+                    "Carrello prodotto vuoto", ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA);
         }
         log.info("Carrello prodotto di carrello con id: {} trovato", idCarrello);
 
         return carrelloProdottoTrovato;
-    }//trovaProdottiDelCarrello
+    }
 
     @Transactional
     public CarrelloProdotto aggiornaQuantita(UUID idCarrelloProdotto, Integer nuovaQuantita) {
@@ -84,8 +82,7 @@ public class CarrelloProdottoService {
         if (nuovaQuantita == null || nuovaQuantita < 0) {
             log.error("Quantità inserita non valida: {}", nuovaQuantita);
             throw new ValoreNonValidoException(
-                    ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA,
-                    "Quantità inserita non valida"
+                    "Quantità inserita non valida", ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA
             );
         }
 
@@ -96,9 +93,9 @@ public class CarrelloProdottoService {
             return carrelloProdotto; // o null, in base a come vuoi gestire la risposta
         }
 
-        if (nuovaQuantita > carrelloProdotto.getProdotto().getQuantitaDisponibile()) {
+        if (nuovaQuantita > carrelloProdotto.getProdotto().getQuantitaRiordinoStandard()) {
             log.error("Quantità richiesta: {}, superiore alla quantità disponibile: {}",
-                    nuovaQuantita, carrelloProdotto.getProdotto().getQuantitaDisponibile());
+                    nuovaQuantita, carrelloProdotto.getProdotto().getQuantitaRiordinoStandard());
             throw new StockInsufficienteException();
         }
 
@@ -106,7 +103,7 @@ public class CarrelloProdottoService {
         CarrelloProdotto salvato = carrelloProdottoRepo.save(carrelloProdotto);
         log.info("Quantità aggiornata per carrello prodotto id: {}", salvato.getId());
         return salvato;
-    }//aggiornaQuantita
+    }
 
     @Transactional
     public void rimuoviProdottoDalCarrello(UUID idCarrelloProdotto) {
@@ -124,7 +121,7 @@ public class CarrelloProdottoService {
         carrelloProdotto.getCarrello().getProdotti().remove(carrelloProdotto);
         carrelloProdottoRepo.delete(carrelloProdotto);
         log.info("Prodotto rimosso con successo dal carrello id: {}", carrelloProdotto.getCarrello().getId());
-    }//rimuoviProdottoDalCarrello
+    }
 
     @Transactional(readOnly = true)
     public BigDecimal calcolaTotaleCarrello(UUID idCarrello) {
@@ -146,5 +143,5 @@ public class CarrelloProdottoService {
 
         log.info("Totale carrello id: {} = {}", idCarrello, totale);
         return totale;
-    }//calcolaTotaleCarrello
-}//CarrelloProdottoService
+    }
+}

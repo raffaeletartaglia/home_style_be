@@ -1,7 +1,6 @@
 package com.homestyle.demo.repository;
 
 import com.homestyle.demo.entity.Carrello;
-import com.homestyle.demo.entity.Carrello.Stato;
 import com.homestyle.demo.entity.Utente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,11 +13,10 @@ import java.util.UUID;
 public interface CarrelloRepository extends JpaRepository<Carrello, UUID> {
 
     // Trova il carrello di un utente
-    Optional<Carrello> findByUtente(Utente utente);
+    Optional<Carrello> findByUtente_Id(UUID idUtente);
 
-    // Trova tutti i carrelli di uno stato specifico
-    List<Carrello> findByStato(Carrello.Stato stato);
+    Optional<Carrello> findByUtente_IdAndStato(UUID utente_id, Carrello.Stato stato);
 
-	Optional<Carrello> findByUtente_IdAndStato(UUID idUtente, Stato attivo);
-    
+
+    boolean existsByUtente_IdAndStato(UUID idUtente, Carrello.Stato stato);
 }//CarrelloRepository

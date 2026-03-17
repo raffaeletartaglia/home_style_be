@@ -1,7 +1,17 @@
 package exception;
+import com.homestyle.demo.ErroreCodice;
 
-public class EntitaNonTrovataException extends RuntimeException {
-	public EntitaNonTrovataException(String messaggio) {
-        super(messaggio);
+public class EntitaNonTrovataException extends BusinessException {
+
+    public EntitaNonTrovataException(String codice) {
+        super(ErroreCodice.valueOf(codice));
     }
-}//EntitaNonTrovataException
+
+    public EntitaNonTrovataException(ErroreCodice codice, String messaggioCustom) {
+        super(codice, messaggioCustom);
+    }
+
+    public EntitaNonTrovataException(ErroreCodice erroreCodice) {
+        super(erroreCodice);
+    }
+}
