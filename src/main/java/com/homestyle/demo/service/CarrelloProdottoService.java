@@ -59,9 +59,7 @@ public class CarrelloProdottoService {
             log.warn("Carrello prodotto di carrello con id: {} vuoto", idCarrello);
             // se preferisci, puoi NON lanciare eccezione e restituire lista vuota
             throw new ValoreNonValidoException(
-                    ErroreCodice.CARRELLO_VUOTO,
-                    "Carrello prodotto vuoto"
-            );
+                    "Carrello prodotto vuoto", ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA);
         }
         log.info("Carrello prodotto di carrello con id: {} trovato", idCarrello);
 
@@ -84,8 +82,7 @@ public class CarrelloProdottoService {
         if (nuovaQuantita == null || nuovaQuantita < 0) {
             log.error("Quantità inserita non valida: {}", nuovaQuantita);
             throw new ValoreNonValidoException(
-                    ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA,
-                    "Quantità inserita non valida"
+                    "Quantità inserita non valida", ErroreCodice.CARRELLO_PRODOTTO_QUANTITA_NON_VALIDA
             );
         }
 
@@ -96,9 +93,9 @@ public class CarrelloProdottoService {
             return carrelloProdotto; // o null, in base a come vuoi gestire la risposta
         }
 
-        if (nuovaQuantita > carrelloProdotto.getProdotto().getQuantitaDisponibile()) {
+        if (nuovaQuantita > carrelloProdotto.getProdotto().getQuantitaRiordinoStandard()) {
             log.error("Quantità richiesta: {}, superiore alla quantità disponibile: {}",
-                    nuovaQuantita, carrelloProdotto.getProdotto().getQuantitaDisponibile());
+                    nuovaQuantita, carrelloProdotto.getProdotto().getQuantitaRiordinoStandard());
             throw new StockInsufficienteException();
         }
 

@@ -125,8 +125,7 @@ public class OrdineService {
             log.error("Il carrello attivo con id: {} dell'utente con id: {}, è vuoto",
                     carrello.getId(), idUtente);
             throw new ValoreNonValidoException(
-                    ErroreCodice.CARRELLO_VUOTO,
-                    "Il carrello è vuoto"
+                    "Il carrello è vuoto", ErroreCodice.CARRELLO_VUOTO
             );
         }
 
@@ -135,12 +134,11 @@ public class OrdineService {
         for (CarrelloProdotto cp : carrello.getProdotti()) {
             Prodotto prodotto = cp.getProdotto();
 
-            if (cp.getQuantita() > prodotto.getQuantitaDisponibile()) {
+            if (cp.getQuantita() > prodotto.getQuantitaRiordinoStandard()) {
                 log.error("Disponibilità insufficiente per prodotto id: {}. Disponibile: {}, richiesto: {}",
-                        prodotto.getId(), prodotto.getQuantitaDisponibile(), cp.getQuantita());
+                        prodotto.getId(), prodotto.getQuantitaRiordinoStandard(), cp.getQuantita());
                 throw new ValoreNonValidoException(
-                        ErroreCodice.PRODOTTO_STOCK_INSUFFICIENTE,
-                        "Disponibilità insufficiente per il prodotto"
+                        "Disponibilità insufficiente per il prodotto", ErroreCodice.PRODOTTO_STOCK_INSUFFICIENTE
                 );
             }
         }
@@ -179,8 +177,8 @@ public class OrdineService {
             dettaglio.setPrezzoUnitario(prodotto.getPrezzo());
             dettagli.add(dettaglio);
 
-            prodotto.setQuantitaDisponibile(
-                    prodotto.getQuantitaDisponibile() - cp.getQuantita()
+            prodotto.setQuantitaRiordinoStandard(
+                    prodotto.getQuantitaRiordinoStandard() - cp.getQuantita()
             );
 
             BigDecimal subtotale = prodotto.getPrezzo()
@@ -237,8 +235,7 @@ public class OrdineService {
             log.error("Non si può modificare l'indirizzo per ordine id: {}, stato: {}",
                     idOrdine, ordine.getStatoOrdine());
             throw new ValoreNonValidoException(
-                    ErroreCodice.ORDINE_STATO_NON_VALIDO,
-                    "L'indirizzo è modificabile solo per ordini IN_ELABORAZIONE"
+                    "L'indirizzo è modificabile solo per ordini IN_ELABORAZIONE", ErroreCodice.INDIRIZZO_NON_VALIDO
             );
         }
         log.info("Stato dell'ordine {} valido per la modifica indirizzo", ordine.getStatoOrdine());
@@ -318,7 +315,7 @@ public class OrdineService {
 
         for (DettaglioOrdine det : ordine.getDettagliOrdine()) {
             Prodotto p = det.getProdotto();
-            p.setQuantitaDisponibile(p.getQuantitaDisponibile() + det.getQuantita());
+            p.setQuantitaRiordinoStandard(p.getQuantitaRiordinoStandard() + det.getQuantita());
         }
         prodottoRepository.saveAll(
                 ordine.getDettagliOrdine()

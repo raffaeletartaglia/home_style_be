@@ -2,8 +2,10 @@ package com.homestyle.demo.service;
 import java.util.UUID; 
 import java.time.LocalDateTime; 
 import java.util.List; 
-import java.util.Optional; 
-import org.springframework.stereotype.Service; 
+import java.util.Optional;
+
+import com.homestyle.demo.ErroreCodice;
+import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional; 
 import lombok.RequiredArgsConstructor; 
 import lombok.extern.slf4j.Slf4j; 
@@ -34,22 +36,22 @@ public class MovimentoMagazzinoService {
 
         if (!controlloTipoMovimento(movimento.getTipoMovimento())) {
             log.error("Tipo movimento non valido: {}", movimento.getTipoMovimento());
-            throw new ValoreNonValidoException("Tipo movimento non valido");
+            throw new ValoreNonValidoException("Tipo movimento non valido", ErroreCodice.MOVIMENTO_MAGAZZINO_NON_VALIDO);
         }
 
         if (!controlloQuantita(movimento.getQuantita())) {
             log.error("Quantità non valida: {}", movimento.getQuantita());
-            throw new ValoreNonValidoException("Quantità non valida");
+            throw new ValoreNonValidoException("Quantità non valida", ErroreCodice.PRODOTTO_STOCK_INSUFFICIENTE);
         }
 
         if (!controlloNote(movimento.getNote())) {
             log.error("Note non valide");
-            throw new ValoreNonValidoException("Note non valide");
+            throw new ValoreNonValidoException("Note non valide", ErroreCodice.MOVIMENTO_MAGAZZINO_NOTE_NON_VALIDE);
         }
 
         if (!controlloDataMovimento(movimento.getDataMovimento())) {
             log.error("Data movimento non valida: {}", movimento.getDataMovimento());
-            throw new ValoreNonValidoException("Data movimento non valida");
+            throw new ValoreNonValidoException("Data movimento non valida", ErroreCodice.MOVIMENTO_MAGAZZINO_DATA_NON_VALIDA);
         }
 
         ControlliUtils.controlloIdValido(movimento.getProdotto().getId(), "Prodotto");
@@ -122,22 +124,22 @@ public class MovimentoMagazzinoService {
         
         if (!controlloTipoMovimento(movimentoAggiornato.getTipoMovimento())) {
             log.error("Tipo movimento non valido: {}", movimentoAggiornato.getTipoMovimento());
-            throw new ValoreNonValidoException("Tipo movimento non valido");
+            throw new ValoreNonValidoException("Tipo movimento non valido", ErroreCodice.MOVIMENTO_MAGAZZINO_TIPO_NON_VALIDO);
         }
 
         if (!controlloQuantita(movimentoAggiornato.getQuantita())) {
             log.error("Quantità non valida: {}", movimentoAggiornato.getQuantita());
-            throw new ValoreNonValidoException("Quantità non valida");
+            throw new ValoreNonValidoException("Quantità non valida", ErroreCodice.MOVIMENTO_MAGAZZINO_QUANTITA_NON_VALIDA);
         }
 
         if (!controlloNote(movimentoAggiornato.getNote())) {
             log.error("Note non valide");
-            throw new ValoreNonValidoException("Note non valide");
+            throw new ValoreNonValidoException("Note non valide", ErroreCodice.MOVIMENTO_MAGAZZINO_NOTE_NON_VALIDE);
         }
 
         if (!controlloDataMovimento(movimentoAggiornato.getDataMovimento())) {
             log.error("Data movimento non valida: {}", movimentoAggiornato.getDataMovimento());
-            throw new ValoreNonValidoException("Data movimento non valida");
+            throw new ValoreNonValidoException("Data movimento non valida", ErroreCodice.MOVIMENTO_MAGAZZINO_DATA_NON_VALIDA);
         }
 
         
@@ -294,7 +296,11 @@ public class MovimentoMagazzinoService {
     private boolean controlloTipoMovimento(MovimentoMagazzino.TipoMovimento tipo) {
         log.debug("Controllo tipo movimento: {}", tipo);
         if (tipo == null) return false;
-        ControlliUtils.controlloValoreEnum(tipo.name(), MovimentoMagazzino.TipoMovimento.class, "Tipo movimento");
+        ControlliUtils.controlloValoreEnum(
+                MovimentoMagazzino.TipoMovimento.class,
+                tipo.name(),
+                "Tipo movimento"
+        );
         return true;
     }
 
@@ -336,7 +342,7 @@ public class MovimentoMagazzinoService {
                 prodotto.setQuantitaRiordinoStandard(quantita);
             default -> {
                 log.error("Tipo movimento non gestito: {}", tipo);
-                throw new ValoreNonValidoException("Tipo movimento non gestito");
+                throw new ValoreNonValidoException("Tipo movimento non gestito", ErroreCodice.MOVIMENTO_MAGAZZINO_TIPO_NON_GESTITO);
             }
         }
 
@@ -360,7 +366,7 @@ public class MovimentoMagazzinoService {
                 prodotto.setQuantitaRiordinoStandard(Math.max(0, attuale - quantita));
             default -> {
                 log.error("Tipo movimento sconosciuto per inversione: {}", tipo);
-                throw new ValoreNonValidoException("Tipo movimento sconosciuto per inversione quantità");
+                throw new ValoreNonValidoException("Tipo movimento sconosciuto per inversione quantità", ErroreCodice.MOVIMENTO_MAGAZZINO_NON_TROVATO);
             }
         }
 

@@ -25,4 +25,6 @@ public interface DettaglioOrdineRepository extends JpaRepository<DettaglioOrdine
     List<DettaglioOrdine> findByOrdine_Id(UUID ordineId);
 
     List<DettaglioOrdine> findByProdotto_Id(UUID prodottoId);
+
+    boolean existsByProdottoIdAndOrdineStatoOrdineIn(UUID prodottoId, List<Ordine.StatoOrdine> inElaborazione);
 }//DettaglioOrdineRepository

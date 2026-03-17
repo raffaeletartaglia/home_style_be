@@ -162,7 +162,11 @@ public class ModalitaPagamentoService {
 	
 	private void controllaTipo(String tipo) {
 		log.debug("Controllo tipo modalità pagamento: {}", tipo);
-	    ControlliUtils.controlloValoreEnum(tipo, ModalitaPagamento.Tipo.class, "Tipo");
+		ControlliUtils.controlloValoreEnum(
+				ModalitaPagamento.Tipo.class,
+				tipo,
+				"Tipo"
+		);
 	}//controllaTipo
 	
 }//ModalitaPagamentoService

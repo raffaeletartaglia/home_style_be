@@ -89,8 +89,8 @@ public class CarrelloService {
                 throw new IllegalArgumentException("La quantità deve essere maggiore di zero");
             }
 
-            if (carrelloProdotto.getQuantita() > prodotto.getQuantitaDisponibile()) {
-                log.error("Quantità richiesta {} > disponibile {}", carrelloProdotto.getQuantita(), prodotto.getQuantitaDisponibile());
+            if (carrelloProdotto.getQuantita() > prodotto.getQuantitaRiordinoStandard()) {
+                log.error("Quantità richiesta {} > disponibile {}", carrelloProdotto.getQuantita(), prodotto.getQuantitaRiordinoStandard());
                 throw new IllegalArgumentException("Quantità richiesta superiore alla disponibilità");
             }
         }

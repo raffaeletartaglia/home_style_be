@@ -20,5 +20,12 @@ public interface RecensioneRepository extends JpaRepository<Recensione, UUID> {
 
     // Trova tutte le recensioni di un prodotto dato tramite il dettaglio ordine
     List<Recensione> findByDettaglioOrdine_ProdottoId(UUID prodottoId);
-    
+
+    boolean existsByDettaglioOrdine_Id(UUID id);
+
+    List<Recensione> findByDettaglioOrdine_Id(UUID dettaglioOrdineId);
+
+    List<Recensione> findByUtente_Id(UUID utenteId);
+
+    List<Recensione> findByDettaglioOrdineProdotto_Id(UUID prodottoId);
 }//RecensioneRepository

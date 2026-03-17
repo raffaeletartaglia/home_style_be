@@ -59,16 +59,14 @@ public class CategoriaService {
 		if (controllaLunghezzaNomeCategoria(categoria.getNomeCategoria())) {
 			log.error("Nome categoria non valido: {}", categoria.getNomeCategoria());
 			throw new ValoreNonValidoException(
-					ErroreCodice.CATEGORIA_NOME_NON_VALIDO,
-					"Nome invalido, caratteri inferiori a 0 o superiori a 100 caratteri"
+					"Nome invalido, caratteri inferiori a 0 o superiori a 100 caratteri", ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA
 			);
 		}
 
 		if (controlloLunghezzaDescrizione(categoria.getDescrizione())) {
 			log.error("Descrizione categoria non valida");
 			throw new ValoreNonValidoException(
-					ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA,
-					"Descrizione invalida, descrizione vuota o superiore a 255 caratteri"
+					"Descrizione invalida, descrizione vuota o superiore a 255 caratteri", ErroreCodice.CATEGORIA_DESCRIZIONE_NON_VALIDA
 			);
 		}
 

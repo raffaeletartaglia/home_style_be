@@ -11,9 +11,10 @@ public class SpedizioneResponseDTO {
 		PREPARAZIONE,
 		SPEDITO,
 		IN_TRANSITO,
-		CONSEGNATO
-		
-	}//Statospedizione
+		CONSEGNATO,
+        ANNULLATO
+
+    }//Statospedizione
 
     private UUID id;
 

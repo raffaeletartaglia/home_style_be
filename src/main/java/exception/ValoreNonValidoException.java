@@ -4,7 +4,7 @@ import com.homestyle.demo.ErroreCodice;
 
 // ValoreNonValidoException
 public class ValoreNonValidoException extends BusinessException {
-    public ValoreNonValidoException(ErroreCodice codice, String messaggioCustom) {
+    public ValoreNonValidoException(String messaggioCustom, ErroreCodice codice) {
         super(codice, messaggioCustom);
     }
 }

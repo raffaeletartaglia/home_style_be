@@ -94,7 +94,7 @@ public class ResoService {
         reso.setDataResoPrevista(dataResoPrevista);
         reso.setOraRitiroReso(oraRitiroReso);
         reso.setMotivo(motivo);
-        reso.setStato(Reso.StatoReso.RICHIESTO); // se vuoi uno stato iniziale
+        reso.setStatoReso(Reso.StatoReso.IN_PREPARAZIONE); // se vuoi uno stato iniziale
 
         Reso salvato = resoRepository.save(reso);
         log.info("Reso creato con successo, id: {}", salvato.getId());
@@ -136,14 +136,14 @@ public class ResoService {
         );
 
         // Non puoi annullare un reso già annullato o già ritirato
-        if (reso.getStato() == Reso.StatoReso.ANNULLATO || reso.getStato() == Reso.StatoReso.RITIRATO) {
-            log.error("Impossibile annullare reso id: {} con stato: {}", idReso, reso.getStato());
+        if (reso.getStatoReso() == Reso.StatoReso.ANNULLATO || reso.getStatoReso() == Reso.StatoReso.RITIRATO) {
+            log.error("Impossibile annullare reso id: {} con stato: {}", idReso, reso.getStatoReso());
             throw new OperazioneNonConsentitaException(
-                    "Impossibile annullare un reso già " + reso.getStato()
-            );
+                    "Impossibile annullare un reso già " + reso.getStatoReso(),
+                    ErroreCodice.PRENOTAZIONE_STATO_NON_VALIDO);
         }
 
-        reso.setStato(Reso.StatoReso.ANNULLATO);
+        reso.setStatoReso(Reso.StatoReso.ANNULLATO);
         Reso salvato = resoRepository.save(reso);
         log.info("Reso id: {} annullato con successo", salvato.getId());
         return salvato;

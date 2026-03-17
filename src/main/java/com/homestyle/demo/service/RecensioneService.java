@@ -1,28 +1,29 @@
-package com.homestyle.demo.service; 
-import org.springframework.stereotype.Service; 
-import com.homestyle.demo.repository.DettaglioOrdineRepository; 
-import com.homestyle.demo.repository.RecensioneRepository; 
-import lombok.RequiredArgsConstructor; 
-import lombok.extern.slf4j.Slf4j; 
-import com.homestyle.demo.entity.Recensione; 
-import com.homestyle.demo.entity.Utente; 
-import java.util.List; 
-import java.util.UUID; 
-import utils.ControlliUtils; 
-import exception.*; 
-import com.homestyle.demo.repository.UtenteRepository; 
-import com.homestyle.demo.entity.DettaglioOrdine;
+package com.homestyle.demo.service;
 
+import org.springframework.stereotype.Service;
+import com.homestyle.demo.ErroreCodice;
+import com.homestyle.demo.repository.DettaglioOrdineRepository;
+import com.homestyle.demo.repository.RecensioneRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import com.homestyle.demo.entity.Recensione;
+import com.homestyle.demo.entity.Utente;
+import java.util.List;
+import java.util.UUID;
+import utils.ControlliUtils;
+import exception.*;
+import com.homestyle.demo.repository.UtenteRepository;
+import com.homestyle.demo.entity.DettaglioOrdine;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class RecensioneService {
-	
+
 	private final RecensioneRepository recensioneRepo;
 	private final UtenteRepository utenteRepo;
 	private final DettaglioOrdineRepository dettaglioOrdineRepo;
-	
+
 	public Recensione creaRecensione(Recensione recensione) {
 		log.info("Creazione nuova recensione per dettaglioOrdineId={} utenteId={}",
 				recensione.getDettaglioOrdine().getId(),
@@ -30,198 +31,228 @@ public class RecensioneService {
 
 		ControlliUtils.controlloIdValido(recensione.getDettaglioOrdine().getId(), "Dettaglio Ordine");
 		ControlliUtils.controlloIdValido(recensione.getUtente().getId(), "Utente");
-		
-	    DettaglioOrdine dettaglioOrdine = dettaglioOrdineRepo.findById(recensione.getDettaglioOrdine().getId())
-	            .orElseThrow(() -> {
-	            	log.error("Dettaglio ordine non trovato id={}", recensione.getDettaglioOrdine().getId());
-	            	return new EntitaNonTrovataException("Dettaglio ordine non trovato");
-	            });
 
-	    Utente utente = utenteRepo.findById(recensione.getUtente().getId())
-	            .orElseThrow(() -> {
-	            	log.error("Utente non trovato id={}", recensione.getUtente().getId());
-	            	return new EntitaNonTrovataException("Utente non trovato");
-	            });
+		DettaglioOrdine dettaglioOrdine = dettaglioOrdineRepo.findById(recensione.getDettaglioOrdine().getId())
+				.orElseThrow(() -> {
+					log.error("Dettaglio ordine non trovato id={}", recensione.getDettaglioOrdine().getId());
+					return new EntitaNonTrovataException(ErroreCodice.DETTAGLIO_ORDINE_NON_TROVATO);
+				});
 
-	    recensione.setDettaglioOrdine(dettaglioOrdine);
-	    recensione.setUtente(utente);
-	    
-		if(recensioneRepo.existsByDettaglioOrdine_Id(recensione.getDettaglioOrdine().getId())){
+		Utente utente = utenteRepo.findById(recensione.getUtente().getId())
+				.orElseThrow(() -> {
+					log.error("Utente non trovato id={}", recensione.getUtente().getId());
+					return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
+				});
+
+		recensione.setDettaglioOrdine(dettaglioOrdine);
+		recensione.setUtente(utente);
+
+		if (recensioneRepo.existsByDettaglioOrdine_Id(recensione.getDettaglioOrdine().getId())) {
 			log.error("Recensione già esistente per dettaglioOrdineId={}", recensione.getDettaglioOrdine().getId());
-			throw new UnicitaException("Recensione già esistente per questo ordine");
+			throw new UnicitaException(
+					"Recensione già esistente per questo ordine",
+					ErroreCodice.RECENSIONE_GIA_ESISTENTE
+			);
 		}
 
-		if(!controllaCommento(recensione.getCommento())) { 
+		if (!controllaCommento(recensione.getCommento())) {
 			log.error("Commento non valido");
-			throw new ValoreNonValidoException("Commento non valido"); 
+			throw new ValoreNonValidoException(
+					"Commento non valido",
+					ErroreCodice.ERRORE_VALIDAZIONE
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneProdotto())) {
+		if (!controllaValutazione(recensione.getValutazioneProdotto())) {
 			log.error("Valutazione prodotto non valida: {}", recensione.getValutazioneProdotto());
-		    throw new ValoreNonValidoException("Valutazione prodotto non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione prodotto non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneConsegna())) {
+		if (!controllaValutazione(recensione.getValutazioneConsegna())) {
 			log.error("Valutazione consegna non valida: {}", recensione.getValutazioneConsegna());
-		    throw new ValoreNonValidoException("Valutazione consegna non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione consegna non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneMontaggio())) {
+		if (!controllaValutazione(recensione.getValutazioneMontaggio())) {
 			log.error("Valutazione montaggio non valida: {}", recensione.getValutazioneMontaggio());
-		    throw new ValoreNonValidoException("Valutazione montaggio non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione montaggio non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
-		
+
 		Recensione salvata = recensioneRepo.save(recensione);
 
 		log.info("Recensione creata con successo id={}", salvata.getId());
 
 		return salvata;
-	
+
 	}//creaRecensione
-	
-	
+
 	public List<Recensione> getRecensioniByProdotto(UUID prodottoId) {
 		log.info("Recupero recensioni per prodottoId={}", prodottoId);
 
-	    ControlliUtils.controlloIdValido(prodottoId, "Prodotto");
+		ControlliUtils.controlloIdValido(prodottoId, "Prodotto");
 
-	    List<Recensione> recensioni = recensioneRepo.findByDettaglioOrdineProdotto_Id(prodottoId);
+		List<Recensione> recensioni = recensioneRepo.findByDettaglioOrdineProdotto_Id(prodottoId);
 
-	    if(recensioni.isEmpty()){
-	        log.error("Nessuna recensione trovata per il prodotto {}", prodottoId);
-	        throw new ValoreNonValidoException("Lista recensioni vuota");
-	    }
+		if (recensioni.isEmpty()) {
+			log.error("Nessuna recensione trovata per il prodotto {}", prodottoId);
+			throw new ValoreNonValidoException(
+					"Lista recensioni vuota",
+					ErroreCodice.RECENSIONE_NON_TROVATA
+			);
+		}
 
-	    log.info("Trovate {} recensioni per prodottoId={}", recensioni.size(), prodottoId);
+		log.info("Trovate {} recensioni per prodottoId={}", recensioni.size(), prodottoId);
 
-	    return recensioni;
+		return recensioni;
 	}//getRecensioniByProdotto
-	
-	
-	public List<Recensione> getRecensioniByUtente(UUID utenteId){
+
+	public List<Recensione> getRecensioniByUtente(UUID utenteId) {
 		log.info("Recupero recensioni per utenteId={}", utenteId);
-		
+
 		ControlliUtils.controlloIdValido(utenteId, "Utente");
 
 		List<Recensione> recensioni = recensioneRepo.findByUtente_Id(utenteId);
-		
-		if(recensioni.isEmpty()){
-			log.info("Nessuna recensione trovata per l'utente {}", utenteId);
-	    } else {
-	    	log.info("Trovate {} recensioni per utenteId={}", recensioni.size(), utenteId);
-	    }
 
-	    return recensioni;
+		if (recensioni.isEmpty()) {
+			log.info("Nessuna recensione trovata per l'utente {}", utenteId);
+		} else {
+			log.info("Trovate {} recensioni per utenteId={}", recensioni.size(), utenteId);
+		}
+
+		return recensioni;
 	}//getRecensioniByUtente
-	
-	
-	public List<Recensione> getRecensioneByDettaglioOrdine(UUID dettaglioOrdineId){
+
+	public List<Recensione> getRecensioneByDettaglioOrdine(UUID dettaglioOrdineId) {
 		log.info("Recupero recensioni per dettaglioOrdineId={}", dettaglioOrdineId);
 
 		ControlliUtils.controlloIdValido(dettaglioOrdineId, "Dettaglio Ordine");
 
 		List<Recensione> recensioni = recensioneRepo.findByDettaglioOrdine_Id(dettaglioOrdineId);
-		
-		if(recensioni.isEmpty()){
-			log.info("Nessuna recensione trovata per dettaglioOrdineId={}", dettaglioOrdineId);
-	    } else {
-	    	log.info("Trovate {} recensioni per dettaglioOrdineId={}", recensioni.size(), dettaglioOrdineId);
-	    }
 
-	    return recensioni;
+		if (recensioni.isEmpty()) {
+			log.info("Nessuna recensione trovata per dettaglioOrdineId={}", dettaglioOrdineId);
+		} else {
+			log.info("Trovate {} recensioni per dettaglioOrdineId={}", recensioni.size(), dettaglioOrdineId);
+		}
+
+		return recensioni;
 	}//getRecensioneByDettaglioOrdine
-	
-	
+
 	public Recensione modificaRecensione(UUID recensioneId, Recensione recensione) {
 		log.info("Modifica recensione id={}", recensioneId);
 
 		ControlliUtils.controlloIdValido(recensioneId, "Recensione");
-		
-		Recensione recensioneVecchia =  recensioneRepo.findById(recensioneId)
-         .orElseThrow(() -> {
-        	 log.error("Recensione non trovata id={}", recensioneId);
-        	 return new EntitaNonTrovataException("Recensione non trovata");
-         });
-		
-		if(recensioneRepo.existsByDettaglioOrdine_Id(recensione.getDettaglioOrdine().getId())){
+
+		Recensione recensioneVecchia = recensioneRepo.findById(recensioneId)
+				.orElseThrow(() -> {
+					log.error("Recensione non trovata id={}", recensioneId);
+					return new EntitaNonTrovataException(ErroreCodice.RECENSIONE_NON_TROVATA);
+				});
+
+		if (recensioneRepo.existsByDettaglioOrdine_Id(recensione.getDettaglioOrdine().getId())
+				&& !recensione.getDettaglioOrdine().getId().equals(recensioneVecchia.getDettaglioOrdine().getId())) {
 			log.error("Recensione già esistente per dettaglioOrdineId={}", recensione.getDettaglioOrdine().getId());
-			throw new UnicitaException("Recensione già esistente per questo ordine");
+			throw new UnicitaException(
+					"Recensione già esistente per questo ordine",
+					ErroreCodice.RECENSIONE_GIA_ESISTENTE
+			);
 		}
 
-		if(!controllaCommento(recensione.getCommento())) { 
+		if (!controllaCommento(recensione.getCommento())) {
 			log.error("Commento non valido");
-			throw new ValoreNonValidoException("Commento non valido"); 
+			throw new ValoreNonValidoException(
+					"Commento non valido",
+					ErroreCodice.ERRORE_VALIDAZIONE
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneProdotto())) {
+		if (!controllaValutazione(recensione.getValutazioneProdotto())) {
 			log.error("Valutazione prodotto non valida: {}", recensione.getValutazioneProdotto());
-		    throw new ValoreNonValidoException("Valutazione prodotto non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione prodotto non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneConsegna())) {
+		if (!controllaValutazione(recensione.getValutazioneConsegna())) {
 			log.error("Valutazione consegna non valida: {}", recensione.getValutazioneConsegna());
-		    throw new ValoreNonValidoException("Valutazione consegna non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione consegna non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
 
-		if(!controllaValutazione(recensione.getValutazioneMontaggio())) {
+		if (!controllaValutazione(recensione.getValutazioneMontaggio())) {
 			log.error("Valutazione montaggio non valida: {}", recensione.getValutazioneMontaggio());
-		    throw new ValoreNonValidoException("Valutazione montaggio non valida");
+			throw new ValoreNonValidoException(
+					"Valutazione montaggio non valida",
+					ErroreCodice.RECENSIONE_VALUTAZIONE_NON_VALIDA
+			);
 		}
 
 		DettaglioOrdine dettaglioOrdine = dettaglioOrdineRepo.findById(recensione.getDettaglioOrdine().getId())
-		        .orElseThrow(() -> {
-		        	log.error("Dettaglio ordine non trovato id={}", recensione.getDettaglioOrdine().getId());
-		        	return new EntitaNonTrovataException("Dettaglio ordine non trovato");
-		        });
+				.orElseThrow(() -> {
+					log.error("Dettaglio ordine non trovato id={}", recensione.getDettaglioOrdine().getId());
+					return new EntitaNonTrovataException(ErroreCodice.DETTAGLIO_ORDINE_NON_TROVATO);
+				});
 
 		Utente utente = utenteRepo.findById(recensione.getUtente().getId())
-		        .orElseThrow(() -> {
-		        	log.error("Utente non trovato id={}", recensione.getUtente().getId());
-		        	return new EntitaNonTrovataException("Utente non trovato");
-		        });
-		
+				.orElseThrow(() -> {
+					log.error("Utente non trovato id={}", recensione.getUtente().getId());
+					return new EntitaNonTrovataException(ErroreCodice.UTENTE_NON_TROVATO);
+				});
+
 		recensioneVecchia.setDettaglioOrdine(dettaglioOrdine);
 		recensioneVecchia.setCommento(recensione.getCommento());
 		recensioneVecchia.setUtente(utente);
 		recensioneVecchia.setValutazioneProdotto(recensione.getValutazioneProdotto());
 		recensioneVecchia.setValutazioneConsegna(recensione.getValutazioneConsegna());
 		recensioneVecchia.setValutazioneMontaggio(recensione.getValutazioneMontaggio());
-		
+
 		Recensione aggiornata = recensioneRepo.save(recensioneVecchia);
 
 		log.info("Recensione aggiornata con successo id={}", aggiornata.getId());
 
 		return aggiornata;
-		
-	}//modificaRecensione
 
+	}//modificaRecensione
 
 	public void eliminaRecensione(UUID recensioneId) {
 		log.info("Eliminazione recensione id={}", recensioneId);
 
 		ControlliUtils.controlloIdValido(recensioneId, "RecensioneId");
-		
-		Recensione recensioneVecchia =  recensioneRepo.findById(recensioneId)
-		         .orElseThrow(() -> {
-		        	 log.error("Recensione non trovata id={}", recensioneId);
-		        	 return new EntitaNonTrovataException("Recensione non trovata");
-		         });
-		
+
+		Recensione recensioneVecchia = recensioneRepo.findById(recensioneId)
+				.orElseThrow(() -> {
+					log.error("Recensione non trovata id={}", recensioneId);
+					return new EntitaNonTrovataException(ErroreCodice.RECENSIONE_NON_TROVATA);
+				});
+
 		recensioneRepo.deleteById(recensioneId);
 
 		log.info("Recensione eliminata con successo id={}", recensioneId);
-		
+
 	}//eliminaRecensione
 
+	// ===== CONTROLLI =====
 
 	private boolean controllaCommento(String commento) {
 		log.debug("Controllo commento recensione");
-	    return commento != null && !commento.trim().isEmpty();
+		return commento != null && !commento.trim().isEmpty();
 	}
-	
+
 	private boolean controllaValutazione(Integer valutazione) {
 		log.debug("Controllo valutazione: {}", valutazione);
-	    return valutazione != null && valutazione >= 1 && valutazione <= 5;
+		return valutazione != null && valutazione >= 1 && valutazione <= 5;
 	}
 
 }//RecensioneService
