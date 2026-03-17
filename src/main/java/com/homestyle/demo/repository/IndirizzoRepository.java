@@ -1,0 +1,24 @@
+package com.homestyle.demo.repository;
+
+import com.homestyle.demo.entity.Indirizzo;
+import com.homestyle.demo.entity.Utente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface IndirizzoRepository extends JpaRepository<Indirizzo, UUID> {
+	
+	// Trova tutti gli indirizzi di un utente
+    List<Indirizzo> findByUtente(Utente utente);
+
+    // Trova tutti gli indirizzi di un utente filtrando per tipo
+    List<Indirizzo> findByUtenteAndTipo(Utente utente, Indirizzo.Tipo tipo);
+
+    // Trova tutti gli indirizzi di un tipo specifico
+    List<Indirizzo> findByTipo(Indirizzo.Tipo tipo);
+	
+	
+
+}//IndirizzoRepository

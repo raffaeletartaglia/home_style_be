@@ -1,0 +1,29 @@
+package com.homestyle.demo.repository;
+
+import com.homestyle.demo.entity.Recensione;
+import com.homestyle.demo.entity.Utente;
+import com.homestyle.demo.entity.DettaglioOrdine;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface RecensioneRepository extends JpaRepository<Recensione, UUID> {
+
+    // Trova tutte le recensioni di un utente
+	List<Recensione> findByUtente_Id(UUID utenteId);
+
+
+    // Trova tutte le recensioni di un dettaglio ordine (cioè di un prodotto specifico in un ordine)
+    List<Recensione> findByDettaglioOrdine_Id(UUID dettaglioOrdineId);
+
+    // Trova tutte le recensioni di un prodotto dato tramite il dettaglio ordine
+    List<Recensione> findByDettaglioOrdineProdotto_Id(UUID prodottoId);
+    
+    boolean existsByDettaglioOrdine_Id(UUID idDettaglioOrdine);
+    
+    
+    
+}//RecensioneRepository
