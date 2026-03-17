@@ -19,5 +19,7 @@ public interface SpedizioneRepository extends JpaRepository<Spedizione, UUID> {
 
     // Trova tutte le spedizioni di un corriere specifico
     List<Spedizione> findByCorriere(String corriere);
+
+    List<Spedizione> findByOrdine_Id(UUID idOrdine);
     
 }//SpedizioneRepository

@@ -1,14 +1,18 @@
 package com.homestyle.demo.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
+@ToString(exclude = "prodotti")
+@EqualsAndHashCode(of = "id")
 @Table(name = "carrello")
 public class Carrello {
 

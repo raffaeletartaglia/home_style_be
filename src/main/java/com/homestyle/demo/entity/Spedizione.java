@@ -1,16 +1,19 @@
 package com.homestyle.demo.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-@Data
-@Entity
+@Getter
+@Setter
+@ToString(exclude = "ordine")
+@EqualsAndHashCode(of = "id")
 @Table(name = "spedizione")
 public class Spedizione {
 
     public enum StatoSpedizione {
+        ANNULLATO,
         PREPARAZIONE,
         SPEDITO,
         IN_TRANSITO,

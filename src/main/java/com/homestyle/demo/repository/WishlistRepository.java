@@ -21,5 +21,11 @@ public interface WishlistRepository extends JpaRepository<Wishlist, UUID> {
 
     // Trova tutti i prodotti con una certa priorità per un utente
     List<Wishlist> findByUtenteAndPriorita(Utente utente, Wishlist.Priorita priorita);
+
+    List<Wishlist> findByUtente_IdOrderByDataAggiuntaDesc(UUID utenteId);
+
+    Optional<Wishlist> findByUtente_IdAndProdotto_Id(UUID utenteId, UUID prodottoId);
+
+    void deleteByUtente_Id(UUID utenteId);
     
 }//WishlistRepository

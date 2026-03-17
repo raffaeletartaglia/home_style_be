@@ -44,7 +44,7 @@ public class OrdineService {
 
         log.info("Ordine con id: {}, trovato", idOrdine);
         return ordineTrovato;
-    }//trovaOrdinePerId
+    }
 
     @Transactional(readOnly = true)
     public List<Ordine> trovaOrdiniPerIdUtente(UUID idUtente) {
@@ -214,7 +214,7 @@ public class OrdineService {
         log.info("Modifiche del carrello con id: {}, avvenute con successo", carrello.getId());
 
         return ordineSalvato;
-    }//creaOrdine
+    }
 
     @Transactional
     public Ordine modificaIndirizzoSpedizione(UUID idOrdine, UUID idNuovoIndirizzo) {
@@ -258,7 +258,7 @@ public class OrdineService {
         Ordine ordineSalvato = ordineRepository.save(ordine);
         log.info("Ordine con id: {}, salvato con successo", ordineSalvato.getId());
         return ordineSalvato;
-    }//modificaIndirizzoSpedizione
+    }
 
     @Transactional
     public Ordine modificaStatoOrdine(UUID idOrdine, Ordine.StatoOrdine nuovoStato) {
@@ -288,7 +288,7 @@ public class OrdineService {
                 ordineSalvato.getStatoOrdine());
 
         return ordineSalvato;
-    }//modificaStatoOrdine
+    }
 
     @Transactional
     public Ordine annullaOrdine(UUID idOrdine) {
@@ -333,6 +333,6 @@ public class OrdineService {
         Ordine ordineSalvato = ordineRepository.save(ordine);
         log.info("Ordine con id: {}, salvato con stato ANNULLATO", ordineSalvato.getId());
         return ordineSalvato;
-    }//annullaOrdine
+    }
 
-}//OrdineService
+}

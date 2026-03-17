@@ -1,4 +1,5 @@
 package com.homestyle.demo;
+
 import org.springframework.http.HttpStatus;
 
 public enum ErroreCodice {
@@ -107,4 +108,4 @@ public enum ErroreCodice {
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
-}//ErroreCodice
+}

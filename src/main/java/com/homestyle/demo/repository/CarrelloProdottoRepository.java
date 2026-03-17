@@ -21,5 +21,6 @@ public interface CarrelloProdottoRepository extends JpaRepository<CarrelloProdot
 
     // Trova tutte le occorrenze di un prodotto in tutti i carrelli (utile per statistiche)
     List<CarrelloProdotto> findByProdotto(Prodotto prodotto);
-    
+
+    List<CarrelloProdotto> findByCarrello_Id(UUID carrelloId);
 }//CarrelloProdottoRepository

@@ -1,12 +1,16 @@
 package com.homestyle.demo.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
+@ToString(exclude = "carrello")
+@EqualsAndHashCode(of = "id")
 @Table(name = "carrello_prodotto", uniqueConstraints = @UniqueConstraint(columnNames = {"carrello_id", "prodotto_id"}))
 public class CarrelloProdotto {
 
@@ -22,8 +26,6 @@ public class CarrelloProdotto {
     @ManyToOne
     @JoinColumn(name = "prodotto_id", nullable = false)
     private Prodotto prodotto;
-
-    
     
     @Column(name ="quantita", nullable = false)
     private Integer quantita;

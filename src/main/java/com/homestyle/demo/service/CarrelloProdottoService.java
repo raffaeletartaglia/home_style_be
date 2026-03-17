@@ -41,7 +41,7 @@ public class CarrelloProdottoService {
         log.info("Carrello prodotto con id: {} trovato", idCarrelloProdotto);
 
         return carrelloProdottoTrovato;
-    }//trovaCarrelloProdottoPerId
+    }
 
     @Transactional(readOnly = true)
     public List<CarrelloProdotto> trovaProdottiDelCarrello(UUID idCarrello) {
@@ -66,7 +66,7 @@ public class CarrelloProdottoService {
         log.info("Carrello prodotto di carrello con id: {} trovato", idCarrello);
 
         return carrelloProdottoTrovato;
-    }//trovaProdottiDelCarrello
+    }
 
     @Transactional
     public CarrelloProdotto aggiornaQuantita(UUID idCarrelloProdotto, Integer nuovaQuantita) {
@@ -106,7 +106,7 @@ public class CarrelloProdottoService {
         CarrelloProdotto salvato = carrelloProdottoRepo.save(carrelloProdotto);
         log.info("Quantità aggiornata per carrello prodotto id: {}", salvato.getId());
         return salvato;
-    }//aggiornaQuantita
+    }
 
     @Transactional
     public void rimuoviProdottoDalCarrello(UUID idCarrelloProdotto) {
@@ -124,7 +124,7 @@ public class CarrelloProdottoService {
         carrelloProdotto.getCarrello().getProdotti().remove(carrelloProdotto);
         carrelloProdottoRepo.delete(carrelloProdotto);
         log.info("Prodotto rimosso con successo dal carrello id: {}", carrelloProdotto.getCarrello().getId());
-    }//rimuoviProdottoDalCarrello
+    }
 
     @Transactional(readOnly = true)
     public BigDecimal calcolaTotaleCarrello(UUID idCarrello) {
@@ -146,5 +146,5 @@ public class CarrelloProdottoService {
 
         log.info("Totale carrello id: {} = {}", idCarrello, totale);
         return totale;
-    }//calcolaTotaleCarrello
-}//CarrelloProdottoService
+    }
+}

@@ -19,4 +19,4 @@ public class BusinessException extends RuntimeException {
     public ErroreCodice getErroreCodice() {
         return erroreCodice;
     }
-}//BusinessException
+}

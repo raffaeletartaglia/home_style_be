@@ -4,9 +4,10 @@ import com.homestyle.demo.dto.request.CarrelloRequestDTO;
 import com.homestyle.demo.dto.response.CarrelloResponseDTO;
 import com.homestyle.demo.entity.Carrello;
 
+import java.util.List;
 
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface CarrelloMapper {
 	
 	 // RequestDTO → Entity
@@ -14,6 +15,6 @@ public interface CarrelloMapper {
 
     // Entity → ResponseDTO
     CarrelloResponseDTO toDTO(Carrello carrello);
-	
+
 	
 }//CarrelloMapper

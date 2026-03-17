@@ -40,7 +40,7 @@ public class ResoService {
                     return new EntitaNonTrovataException(ErroreCodice.RESO_NON_TROVATO);
                 }
         );
-    }//rovaResoPerId
+    }
 
     @Transactional(readOnly = true)
     public Reso trovaResoPerDettaglioOrdine(UUID idDettaglioOrdine) {
@@ -53,10 +53,14 @@ public class ResoService {
                     return new EntitaNonTrovataException(ErroreCodice.RESO_NON_TROVATO);
                 }
         );
-    }//trovaResoPerDettaglioOrdine
+    }
 
     @Transactional
-    public Reso creaReso(UUID idDettaglioOrdine,UUID idIndirizzoReso, LocalDate dataResoPrevista,LocalTime oraRitiroReso,String motivo) {
+    public Reso creaReso(UUID idDettaglioOrdine,
+                         UUID idIndirizzoReso,
+                         LocalDate dataResoPrevista,
+                         LocalTime oraRitiroReso,
+                         String motivo) {
 
         log.info("Creazione reso per dettaglio ordine id: {}", idDettaglioOrdine);
 
@@ -74,7 +78,7 @@ public class ResoService {
         if (dettaglio.getReso() != null) {
             log.error("Esiste già un reso per dettaglio ordine id: {}", idDettaglioOrdine);
             throw new ResoGiaEsistenteException();
-        }//creaReso
+        }
 
         // 3. Indirizzo reso
         Indirizzo indirizzo = indirizzoRepository.findById(idIndirizzoReso)
@@ -117,7 +121,7 @@ public class ResoService {
         Reso salvato = resoRepository.save(reso);
         log.info("Reso id: {} aggiornato con nuova data/ora ritiro", salvato.getId());
         return salvato;
-    }//aggiornaDataOraRitiro
+    }
 
     @Transactional
     public Reso annullaReso(UUID idReso) {
@@ -143,6 +147,6 @@ public class ResoService {
         Reso salvato = resoRepository.save(reso);
         log.info("Reso id: {} annullato con successo", salvato.getId());
         return salvato;
-    }//annullaReso
+    }
 
-}//ResoService
+}

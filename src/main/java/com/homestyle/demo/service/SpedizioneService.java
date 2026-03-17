@@ -33,7 +33,7 @@ public class SpedizioneService {
                     return new IllegalArgumentException("Spedizione non trovata");
                 }
         );
-    }//trovaSpedizionePerId
+    }
 
     @Transactional(readOnly = true)
     public List<Spedizione> trovaSpedizioniPerOrdine(UUID idOrdine) {
@@ -44,7 +44,7 @@ public class SpedizioneService {
                 spedizioneRepository.findByOrdine_Id(idOrdine);
         log.info("Trovate {} spedizioni per ordine id: {}", spedizioni.size(), idOrdine);
         return spedizioni;
-    }//trovaSpedizioniPerOrdine
+    }
 
 
     @Transactional
@@ -79,10 +79,11 @@ public class SpedizioneService {
         ordineRepository.save(ordine);
         log.info("Spedizione salvata con successo e stato ordine modificato");
         return salvata;
-    }//creaSpedizione
+    }
 
     @Transactional
-    public Spedizione aggiornaStatoSpedizione(UUID idSpedizione,Spedizione.StatoSpedizione nuovoStato) {
+    public Spedizione aggiornaStatoSpedizione(UUID idSpedizione,
+                                              Spedizione.StatoSpedizione nuovoStato) {
         log.info("Aggiornamento stato spedizione id: {} -> {}", idSpedizione, nuovoStato);
         ControlliUtils.controlloIdValido(idSpedizione, "spedizione");
 
@@ -134,6 +135,7 @@ public class SpedizioneService {
         Spedizione salvata = spedizioneRepository.save(spedizione);
         log.info("Spedizione id: {} aggiornata a stato: {}", salvata.getId(), salvata.getStatoSpedizione());
         return salvata;
-    }//aggiornaStatoSpedizione
+    }
 
-}//SpedizioneService
+}
+

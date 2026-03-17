@@ -1,6 +1,6 @@
 package com.homestyle.demo.entity;
 
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
 
 
@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"ordine", "recensioni", "reso"})
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(
-    name = "dettaglio_ordine",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"ordine_id", "prodotto_id"})
+        name = "dettaglio_ordine",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"ordine_id", "prodotto_id"})
 )
 public class DettaglioOrdine {
 

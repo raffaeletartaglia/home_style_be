@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -17,7 +18,7 @@ public interface OrdineRepository extends JpaRepository<Ordine, UUID> {
     List<Ordine> findByUtente(Utente utente);
 
     // Trova tutti gli ordini di un utente filtrando per stato
-    List<Ordine> findByUtenteAndStatoOrdine(Utente utente, Ordine.StatoOrdine statoOrdine);
+    List<Ordine> findByUtente_IdAndStatoOrdine(UUID idUtente, Ordine.StatoOrdine statoOrdine);
 
     // Trova tutti gli ordini con uno stato specifico
     List<Ordine> findByStatoOrdine(Ordine.StatoOrdine statoOrdine);
@@ -27,5 +28,6 @@ public interface OrdineRepository extends JpaRepository<Ordine, UUID> {
 
     // Trova tutti gli ordini per un certo indirizzo di spedizione
     List<Ordine> findByIndirizzoSpedizione(Indirizzo indirizzo);
-    
+
+    List<Ordine> findByUtente_Id(UUID utenteId);
 }//OrdineRepository

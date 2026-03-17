@@ -1,4 +1,6 @@
 package utils;
+import com.homestyle.demo.entity.Indirizzo;
+import com.homestyle.demo.entity.Ordine;
 import exception.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,8 +24,17 @@ public class ControlliUtils {
     
     private static final String NUMERO_REGEX = "^3\\d{9}$";
     private static final Pattern NUMERO_PATTERN = Pattern.compile(NUMERO_REGEX);
-    
+
     public static void controlloTransizioneStatoValida(Ordine.StatoOrdine statoAttuale, Ordine.StatoOrdine nuovoStato) {
+
+	public static void controlloStatoOrdineValido(Ordine.StatoOrdine stato) {
+		if (stato == null) {
+			throw new IllegalArgumentException("Lo stato dell'ordine non può essere nullo");
+		}
+	}
+
+
+	public static void controlloTransizioneStatoValida(Ordine.StatoOrdine statoAttuale, Ordine.StatoOrdine nuovoStato) {
 		boolean transazioneValida = switch (statoAttuale) {
 			case IN_ELABORAZIONE -> nuovoStato == Ordine.StatoOrdine.SPEDITO
 					|| nuovoStato == Ordine.StatoOrdine.ANNULLATO;
@@ -39,7 +50,7 @@ public class ControlliUtils {
 			);
 		}
 	}//controlloTransizioneStatoValida
-    
+
 	//Controllo esistenza entità
 	public void controlloEsistenzaEntita(Object entity,String messaggio) {
 		if (entity == null) {
@@ -73,7 +84,6 @@ public class ControlliUtils {
 	
 	
 	//Controllo valori ENUM
-	public static <T extends Enum<T>> void controlloValoreEnum(String valore, Class<T> classeEnum, String nome ) {
 		try {
             Enum.valueOf(classeEnum, valore);
         } catch (IllegalArgumentException e) {
@@ -117,7 +127,7 @@ public class ControlliUtils {
 	        }
 	        return true;
 	    }//numeroTelefonoValido
-	 
+
 	 public static boolean numeroCartaPagamento(String numeroCartaP) {
 
 		    // controllo null
@@ -157,7 +167,7 @@ public class ControlliUtils {
 		    throw new IllegalArgumentException("Numero carta non valido o tipo carta non supportato");
 
 		}// numeroCartaPagamento
-	 
+
 	 public static boolean controllaIntestatarioCarta(String intestatario) {
 
 		    if (intestatario == null) {
@@ -177,7 +187,7 @@ public class ControlliUtils {
 
 		    return true;
 	 }//controllaIntestatarioCarta
-	 
+
 	 public static boolean controlloScadenzaCarta(LocalDate scadenza) {
 
 		    if (scadenza == null) {
@@ -190,7 +200,7 @@ public class ControlliUtils {
 
 		    return true;
 		}//controlloScadenzaCarta
-	 
+
 	 public static boolean controlloCVV(String cvv) {
 
 		    if (cvv == null) {
@@ -209,7 +219,7 @@ public class ControlliUtils {
 
 		    return true;
 	 }//controlloCVV
-	 
+
 	 public static boolean controllaTipoCarta(String numeroCarta) {
 		    if (numeroCarta == null || numeroCarta.trim().isEmpty()) {
 		        throw new IllegalArgumentException("Numero carta non può essere null o vuoto");
@@ -239,6 +249,6 @@ public class ControlliUtils {
 				throw  new IllegalArgumentException("Il tipo indirizzo non è valido");
 			}
 		}//controlloTipoIndirizzo
-	 
-	
+
+
 }//ControlliUtils
