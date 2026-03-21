@@ -23,5 +23,5 @@ public interface IndirizzoRepository extends JpaRepository<Indirizzo, UUID> {
     void deleteByUtente(Utente utente);
 
     // Elimina tutti gli indirizzi di un utente
-    void deleteAllByUtente();
+    void deleteAllByUtente(Utente utente);
 }//IndirizzoRepository

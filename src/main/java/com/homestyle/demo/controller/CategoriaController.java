@@ -27,8 +27,11 @@ public class CategoriaController {
 	@GetMapping("/{idCategoria}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<CategoriaResponseDTO> trovaCategoriaPerId(@PathVariable UUID idCategoria) {
-		Categoria categoria = categoriaService.getCategoriaById(idCategoria);
-		return ResponseEntity.ok(categoriaMapper.toDTO(categoria));
+		return ResponseEntity.ok(
+				categoriaMapper.toDTO(
+						categoriaService.getCategoriaById(idCategoria)
+				)
+		);
 	}
 
 	@GetMapping
@@ -44,14 +47,12 @@ public class CategoriaController {
 	 * ADMIN: crea una nuova categoria
 	 */
 	@PostMapping
-	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<CategoriaResponseDTO> aggiungiCategoria(
 			@RequestBody CategoriaRequestDTO requestDTO) {
-
-		Categoria nuova = categoriaMapper.toEntity(requestDTO);
-		Categoria salvata = categoriaService.addCategoria(nuova);
-		return ResponseEntity.ok(categoriaMapper.toDTO(salvata));
-	}
+		return ResponseEntity.ok(
+				categoriaMapper.toDTO(categoriaService.addCategoria(categoriaMapper.toEntity(requestDTO))));
+	}//aggiungiCategoria
 
 	/**
 	 * ADMIN: modifica una categoria esistente

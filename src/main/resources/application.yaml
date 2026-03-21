@@ -21,24 +21,21 @@ spring:
       hibernate:
         format_sql: true       # formatta le query nei log
 
-  # Configurazione Resource Server JWT (provider esterno)
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          # Sostituisci con il tuo issuer (Keycloak/Auth0/altro)
-          issuer-uri: https://mio-provider-esterno.com/realms/homestyle
-          # in alternativa, se non hai issuer:
-          # jwk-set-uri: https://mio-provider-esterno.com/realms/homestyle/protocol/openid-connect/certs
+  spring:
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://localhost:8081/realms/homestyle
+
 
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: DEBUG       # utile per vedere cosa fa Spring Security
-    org.hibernate.SQL: DEBUG                  # query SQL
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # parametri delle query
-    com.homestyle.demo: DEBUG                 # log della tua app (service, controller, ecc.)
+    org.springframework.web: ERROR
+    org.springframework.security: ERROR
+    org.hibernate: ERROR
+    com.homestyle.demo: DEBUG   # se vuoi tieni la tua app più verbosa
 
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"

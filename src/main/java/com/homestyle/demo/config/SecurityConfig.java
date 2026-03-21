@@ -37,7 +37,7 @@ public class SecurityConfig {
                         // endpoint pubblici se ne hai (es. health, swagger)
                         .requestMatchers("/actuator/health", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         // tutto il resto richiede autenticazione
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 // dice a Spring: questa app è un resource server che accetta JWT da un provider esterno
                 .oauth2ResourceServer(oauth2 -> oauth2

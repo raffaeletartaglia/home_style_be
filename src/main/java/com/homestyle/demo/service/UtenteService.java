@@ -65,14 +65,14 @@ public class UtenteService {
                     ErroreCodice.UTENTE_NUMERO_TELEFONO_NON_VALIDO);
         }
 
-        if (utenteRepo.existByEmail(utente.getEmail())) {
+        if (utenteRepo.existsByEmail(utente.getEmail())) {
             log.error("Email già registrata: {}", utente.getEmail());
             throw new EmailEsistenteException("Email già registrata",
                     ErroreCodice.UTENTE_EMAIL_GIA_REGISTRATA);
         }
 
         if (utente.getNumeroTelefono() != null &&
-                utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono())) {
+                utenteRepo.existsByNumeroTelefono(utente.getNumeroTelefono())) {
             log.error("Numero telefono già registrato: {}", utente.getNumeroTelefono());
             throw new NumeroEsistenteException("Numero telefono già registrato",
                     ErroreCodice.UTENTE_NUMERO_GIA_REGISTRATO);
@@ -116,7 +116,7 @@ public class UtenteService {
         }
 
         if (utente.getNumeroTelefono() != null &&
-                utenteRepo.existByNumeroTelefono(utente.getNumeroTelefono()) &&
+                utenteRepo.existsByNumeroTelefono(utente.getNumeroTelefono()) &&
                 !utente.getNumeroTelefono().equals(vecchioUtente.getNumeroTelefono())) {
 
             log.error("Numero telefono già registrato: {}", utente.getNumeroTelefono());
@@ -151,7 +151,7 @@ public class UtenteService {
             throw new ValoreNonValidoException("Email non valida", ErroreCodice.UTENTE_EMAIL_NON_VALIDA);
         }
 
-        if (utenteRepo.existByEmail(nuovaEmail) &&
+        if (utenteRepo.existsByEmail(nuovaEmail) &&
                 !utente.getEmail().equals(nuovaEmail)) {
 
             log.error("Email già registrata: {}", nuovaEmail);

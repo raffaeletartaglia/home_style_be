@@ -9,6 +9,7 @@ import java.util.UUID;
 @Setter
 @ToString(exclude = "ordine")
 @EqualsAndHashCode(of = "id")
+@Entity
 @Table(name = "spedizione")
 public class Spedizione {
 

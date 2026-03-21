@@ -16,12 +16,10 @@ public interface UtenteRepository extends JpaRepository<Utente, UUID> {
 
     Optional<Utente> findByEmail(String email);
 
-    @Query("SELECT u.id FROM Utente u WHERE u.email = :email")
-    
-    boolean existByEmail(String email);
-    
-    boolean existByNumeroTelefono(String numeroTelefono);
-    
+    boolean existsByEmail(String email);
+    boolean existsByNumeroTelefono(String numeroTelefono);
+
+
     List<Utente> findByRuolo(Ruolo ruolo);
     
     Optional<Utente> findByNumeroTelefono(String numeroTelefono);
