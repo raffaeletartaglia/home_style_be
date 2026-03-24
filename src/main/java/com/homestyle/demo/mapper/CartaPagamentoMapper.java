@@ -5,9 +5,10 @@ import com.homestyle.demo.dto.request.CartaPagamentoRequestDTO;
 import com.homestyle.demo.dto.response.CartaPagamentoResponseDTO;
 import com.homestyle.demo.entity.CartaPagamento;
 
+import java.util.List;
 
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface CartaPagamentoMapper {
 	
 	 // RequestDTO → Entity
@@ -15,5 +16,8 @@ public interface CartaPagamentoMapper {
 
     // Entity → ResponseDTO
     CartaPagamentoResponseDTO toDTO(CartaPagamento cartaPagamento);
+
+    // Entity → ResponseDTO
+    List<CartaPagamentoResponseDTO> toDTOs(List<CartaPagamento> cartaPagamento);
 	
 }//CartaPagamentoMapper

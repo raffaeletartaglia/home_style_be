@@ -78,4 +78,4 @@ public class WishlistController {
         wishlistService.svuotaWishlistPerUtente(idUtente);
         return ResponseEntity.noContent().build();
     }
-}
+}//WishlistController

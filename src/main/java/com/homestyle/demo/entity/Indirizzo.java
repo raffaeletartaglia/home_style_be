@@ -16,7 +16,8 @@ public class Indirizzo {
 		SPEDIZIONE,
 		FATTURAZIONE
 	}//Tipo
-	
+
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id")

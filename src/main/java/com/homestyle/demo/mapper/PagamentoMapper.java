@@ -6,7 +6,7 @@ import com.homestyle.demo.dto.request.PagamentoRequestDTO;
 import com.homestyle.demo.dto.response.PagamentoResponseDTO;
 import com.homestyle.demo.entity.Pagamento;
 
-@Mapper(componentModel = "string")
+@Mapper(componentModel = "spring")
 public interface PagamentoMapper {
 	
 	//RequestDTO -> Entity

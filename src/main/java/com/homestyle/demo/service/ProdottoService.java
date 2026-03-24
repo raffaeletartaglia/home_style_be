@@ -238,7 +238,7 @@ public class ProdottoService {
 		return aggiornato;
 	}//modificaProdotto
 
-	// ===== CONTROLLI =====
+
 
 	private boolean controlloMarca(String marca) {
 		log.debug("Controllo marca: {}", marca);

@@ -27,7 +27,7 @@ public class ModalitaPagamento {
 	@Column(name = "descrizione")
 	private String descrizione;
 
-	//RELAZIONI
+
 	// ModalitaPagamento->Pagamento (1:n)
     @OneToMany(mappedBy = "modalitaPagamento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pagamento> pagamenti = new ArrayList<>();

@@ -59,14 +59,10 @@ public class CategoriaController {
 	 */
 	@PutMapping("/{idCategoria}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<CategoriaResponseDTO> modificaCategoria(
-			@PathVariable UUID idCategoria,
-			@RequestBody CategoriaRequestDTO requestDTO) {
-
-		Categoria daModificare = categoriaMapper.toEntity(requestDTO);
-		Categoria aggiornata = categoriaService.modifyCategoria(idCategoria, daModificare);
-		return ResponseEntity.ok(categoriaMapper.toDTO(aggiornata));
-	}
+	public ResponseEntity<CategoriaResponseDTO> modificaCategoria(@PathVariable UUID idCategoria, @RequestBody CategoriaRequestDTO requestDTO) {
+		return ResponseEntity.ok(
+				categoriaMapper.toDTO(categoriaService.modifyCategoria(idCategoria,categoriaMapper.toEntity(requestDTO))));
+	}//modificaCategoria
 
 	/**
 	 * ADMIN: elimina una categoria
@@ -76,5 +72,5 @@ public class CategoriaController {
 	public ResponseEntity<Void> eliminaCategoria(@PathVariable UUID idCategoria) {
 		categoriaService.deleteCategoria(idCategoria);
 		return ResponseEntity.noContent().build();
-	}
-}
+	}//eliminaCategoria
+}//CategoriaController

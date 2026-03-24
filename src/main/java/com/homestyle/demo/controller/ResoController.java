@@ -23,7 +23,7 @@ public class ResoController {
     private final ResoService resoService;
     private final ResoMapper resoMapper;
 
-    // ============ LETTURA ============
+
 
     /**
      * USER/ADMIN: recupera un reso per id
@@ -97,5 +97,5 @@ public class ResoController {
         Reso reso = resoService.annullaReso(idReso);
         return ResponseEntity.ok(resoMapper.toDTO(reso));
     }
-}
+}//ResoController
 

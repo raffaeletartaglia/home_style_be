@@ -6,6 +6,8 @@ import com.homestyle.demo.dto.request.RecensioneRequestDTO;
 import com.homestyle.demo.dto.response.RecensioneResponseDTO;
 import com.homestyle.demo.entity.Recensione;
 
+import java.util.List;
+
 
 @Mapper(componentModel = "spring")
 public interface RecensioneMapper {
@@ -15,6 +17,9 @@ public interface RecensioneMapper {
 
     // Entity → ResponseDTO
 	RecensioneResponseDTO toDTO(Recensione recensione);
+
+	// Entity → ResponseDTO
+	List<RecensioneResponseDTO> toDTOs(List<Recensione> recensione);
 	
 	
 

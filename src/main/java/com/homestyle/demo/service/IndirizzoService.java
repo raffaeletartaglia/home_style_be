@@ -47,7 +47,7 @@ public class IndirizzoService {
      * @param idUtente
      * @return
      */
-    List<Indirizzo> trovaTuttiGliIndirizziDallIdUtente(UUID idUtente) {
+    public List<Indirizzo> trovaTuttiGliIndirizziDallIdUtente(UUID idUtente) {
         log.info("Cerco gli indirizzi in base all'id utente: {}", idUtente);
 
         ControlliUtils.controlloIdValido(idUtente, "utente");
@@ -134,7 +134,7 @@ public class IndirizzoService {
      * Aggiunge una lista di indirizzi a un utente
      */
     @Transactional
-    List<Indirizzo> aggiungiIndirizzi(UUID idUtente, List<Indirizzo> indirizzi) {
+    public List<Indirizzo> aggiungiIndirizzi(UUID idUtente, List<Indirizzo> indirizzi) {
         log.info("Inizio a creare i nuovi indirizzi dell'utente con id: {}", idUtente);
 
         ControlliUtils.controlloIdValido(idUtente, "utente");

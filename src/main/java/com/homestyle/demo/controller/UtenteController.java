@@ -24,7 +24,7 @@ public class UtenteController {
     private UtenteService utenteService;
 
     @GetMapping("/{idUtente}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UtenteResponseDTO> trovaUtentePerId(@PathVariable UUID idUtente){
         return ResponseEntity.ok(
                 utenteMapper.toDTO(
@@ -36,9 +36,9 @@ public class UtenteController {
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<UtenteResponseDTO> registraUtente(@RequestBody UtenteRequestDTO requestDTO){
-        Utente nuovo = utenteMapper.toEntity(requestDTO);
-        Utente salvato = utenteService.registrazioneUtente(nuovo);
-        return ResponseEntity.ok(utenteMapper.toDTO(salvato));
+        return ResponseEntity.ok(
+                utenteMapper.toDTO(
+                        utenteService.registrazioneUtente(utenteMapper.toEntity(requestDTO))));
     }//registraUtente
 
     @PutMapping
@@ -48,7 +48,26 @@ public class UtenteController {
                 utenteMapper.toDTO(
                         utenteService.modificaUtente(idUtente, utenteMapper.toEntity(requestDTO))));
     }//modificaUtente
-
+    @PutMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UtenteResponseDTO> modificaEmail(@PathVariable UUID idUtente, @RequestBody UtenteRequestDTO requestDTO) {
+        return ResponseEntity.ok(
+                utenteMapper.toDTO(
+                        utenteService.modificaEmailUtente(idUtente, utenteMapper.toEntity(requestDTO))));
+    }//modificaEmail
+    @PutMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UtenteResponseDTO> modificaPassword(@PathVariable UUID idUtente, @RequestBody UtenteRequestDTO requestDTO) {
+        return ResponseEntity.ok(
+                utenteMapper.toDTO(
+                        utenteService.modificaPasswordUtente(idUtente, utenteMapper.toEntity(requestDTO))));
+    }//modificaPassword
+    @DeleteMapping("/{idUtente}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UtenteResponseDTO> eliminaUtente(@PathVariable UUID idUtente) {
+        utenteService.deleteUtente(idUtente);
+        return ResponseEntity.noContent().build();
+    }//deleteUtente
 
 
 }//UtenteController

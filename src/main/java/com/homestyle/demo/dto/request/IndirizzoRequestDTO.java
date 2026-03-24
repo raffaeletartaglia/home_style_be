@@ -2,17 +2,11 @@ package com.homestyle.demo.dto.request;
 
 import lombok.Data;
 import java.util.UUID;
+import com.homestyle.demo.entity.Indirizzo;
 
 @Data
 public class IndirizzoRequestDTO {
 	
-	public enum TipoIndirizzo {
-
-	    RESIDENZA,
-	    SPEDIZIONE,
-	    FATTURAZIONE
-
-	}//TipoIndirizzo
 
     private UUID utenteId;
 
@@ -28,6 +22,6 @@ public class IndirizzoRequestDTO {
 
     private String cap;
 
-    private TipoIndirizzo tipo; // RESIDENZA, SPEDIZIONE, FATTURAZIONE
+    private Indirizzo.Tipo tipo;
     
 }//IndirizzoRequestDTO

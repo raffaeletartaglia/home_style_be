@@ -145,7 +145,7 @@ public class CartaPagamentoService {
         log.info("Carta Pagamento eliminata con successo id={}", cartaId);
     }//deleteCartaPagamento
 
-    // ===== CONTROLLI =====
+
 
     private boolean controllaNumeroCarta(String numeroCarta) {
         log.debug("Controllo numero carta: {}", numeroCarta);

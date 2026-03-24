@@ -6,6 +6,7 @@ import com.homestyle.demo.dto.request.DettaglioOrdineRequestDTO;
 import com.homestyle.demo.dto.response.DettaglioOrdineResponseDTO;
 import com.homestyle.demo.entity.DettaglioOrdine;
 
+import java.util.List;
 
 
 @Mapper(componentModel = "string")
@@ -16,5 +17,7 @@ public interface DettaglioOrdineMapper {
 			
 			//Entity -> ResponseDTO
 			DettaglioOrdineResponseDTO toDTO(DettaglioOrdine dettaglioOrdine);
+
+			List<DettaglioOrdineResponseDTO> toDTOs(List<DettaglioOrdine> dettaglioOrdine);
 	
 }//DettaglioOrdineMapper

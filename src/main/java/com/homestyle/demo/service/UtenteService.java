@@ -135,7 +135,8 @@ public class UtenteService {
         return aggiornato;
     }//modificaUtente
 
-    public Utente modificaEmailUtente(UUID idUtente, String nuovaEmail) {
+    public Utente modificaEmailUtente(UUID idUtente,Utente utenteEmail) {
+        String nuovaEmail = utenteEmail.getEmail();
         log.info("Modifica email utente id={} nuovaEmail={}", idUtente, nuovaEmail);
 
         ControlliUtils.controlloIdValido(idUtente, "Utente");
@@ -168,7 +169,8 @@ public class UtenteService {
         return aggiornato;
     }//modificaEmailUtente
 
-    public Utente modificaPasswordUtente(UUID idUtente, String nuovaPassword) {
+    public Utente modificaPasswordUtente(UUID idUtente, Utente utentePassword) {
+        String nuovaPassword = utentePassword.getPassword();
         log.info("Modifica password utente id={}", idUtente);
 
         ControlliUtils.controlloIdValido(idUtente, "Utente");
@@ -220,7 +222,7 @@ public class UtenteService {
         log.info("Utente eliminato con successo id={}", idUtente);
     }//deleteUtente
 
-    // ========= VALIDAZIONI =========
+
 
     private boolean controllaNomeUtente(String nomeUtente) {
         log.debug("Controllo nome utente: {}", nomeUtente);

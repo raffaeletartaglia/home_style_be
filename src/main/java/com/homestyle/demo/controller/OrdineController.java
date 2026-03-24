@@ -129,5 +129,5 @@ public class OrdineController {
     public ResponseEntity<OrdineResponseDTO> annullaOrdine(@PathVariable UUID idOrdine) {
         return ResponseEntity.ok(ordineMapper.toDTO(ordineService.annullaOrdine(idOrdine)));
     }
-}
+}//OrdineController
 

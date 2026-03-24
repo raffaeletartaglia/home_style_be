@@ -74,5 +74,5 @@ public class SpedizioneController {
         Spedizione spedizione = spedizioneService.aggiornaStatoSpedizione(idSpedizione, nuovoStato);
         return ResponseEntity.ok(spedizioneMapper.toDTO(spedizione));
     }
-}
+}//SpedizioneController
 
